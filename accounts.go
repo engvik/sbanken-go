@@ -36,3 +36,24 @@ func (c *Client) ListAccounts() ([]Account, error) {
 
 	return data.Accounts, nil
 }
+
+func (c *Client) ListAccount(accountID string) (Account, error) {
+	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
+
+	res, sc, err := c.request(url)
+	if err != nil {
+		return Account{}, err
+	}
+
+	if sc != http.StatusOK {
+		return Account{}, fmt.Errorf("unexpected status code: %d", sc)
+	}
+
+	data := struct {
+		Account Account `json:"item"`
+	}{}
+
+	json.Unmarshal(res, &data)
+
+	return data.Account, nil
+}

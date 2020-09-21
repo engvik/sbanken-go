@@ -23,5 +23,10 @@ func TestNewClient(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	log.Println(a)
+	acc, err := c.ListAccount(a[0].ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	log.Println(acc)
 }
