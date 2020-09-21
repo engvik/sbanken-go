@@ -3,7 +3,6 @@ package sbanken
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -26,7 +25,7 @@ type Efaktura struct {
 	CreditAccountNumber int     `json:"creditAccountNumber"`
 }
 
-type EfakturaQuery struct {
+type EfakturaListQuery struct {
 	StartDate time.Time
 	EndDate   time.Time
 	Status    string
@@ -34,7 +33,7 @@ type EfakturaQuery struct {
 	Length    string
 }
 
-func (q *EfakturaQuery) QueryString(u string) (string, error) {
+func (q *EfakturaListQuery) QueryString(u string) (string, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
 		return u, err
@@ -63,12 +62,11 @@ func (q *EfakturaQuery) QueryString(u string) (string, error) {
 	}
 
 	return query.Encode(), nil
-
 }
 
-func (c *Client) ListEfakturas(q *EfakturaQuery) ([]Efaktura, error) {
+func (c *Client) ListEfakturas(q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
-	log.Println(url)
+
 	if q != nil {
 		qs, err := q.QueryString(url)
 		if err != nil {
@@ -76,7 +74,6 @@ func (c *Client) ListEfakturas(q *EfakturaQuery) ([]Efaktura, error) {
 		}
 
 		url = fmt.Sprintf("%s?%s", url, qs)
-		log.Println(url)
 	}
 
 	res, sc, err := c.request(url)
