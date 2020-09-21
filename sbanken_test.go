@@ -18,15 +18,10 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	a, err := c.ListAccounts()
+	a, err := c.ListCards()
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	acc, err := c.ListAccount(a[0].ID)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	log.Println(acc)
+	log.Printf("%+v", a)
 }
