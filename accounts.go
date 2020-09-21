@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -16,10 +17,10 @@ type Account struct {
 	Number      int     `json:"accountNumber"`
 }
 
-func (c *Client) ListAccounts() ([]Account, error) {
+func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts", c.baseURL)
 
-	res, sc, err := c.request(&httpRequest{
+	res, sc, err := c.request(ctx, &httpRequest{
 		method: http.MethodGet,
 		url:    url,
 	})
@@ -40,10 +41,10 @@ func (c *Client) ListAccounts() ([]Account, error) {
 	return data.Accounts, nil
 }
 
-func (c *Client) ListAccount(accountID string) (Account, error) {
+func (c *Client) ListAccount(ctx context.Context, accountID string) (Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
 
-	res, sc, err := c.request(&httpRequest{
+	res, sc, err := c.request(ctx, &httpRequest{
 		method: http.MethodGet,
 		url:    url,
 	})

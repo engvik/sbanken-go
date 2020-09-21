@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"os"
 	"testing"
 )
@@ -12,12 +13,14 @@ func TestNewClient(t *testing.T) {
 		CustomerID:   os.Getenv("CUSTOMER_ID"),
 	}
 
-	c, err := NewClient(cfg, nil)
+	ctx := context.Background()
+
+	c, err := NewClient(ctx, cfg, nil)
 	if err != nil {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	err = c.PayEfaktura(&EfakturaPayQuery{})
+	err = c.PayEfaktura(ctx, &EfakturaPayQuery{})
 	if err != nil {
 		t.Fatal(err)
 	}

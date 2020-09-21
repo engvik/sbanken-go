@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -71,7 +72,7 @@ type EfakturaPayQuery struct {
 	PayOnlyMinimumAmount bool   `json:"PayOnlyMinimumAmount"`
 }
 
-func (c *Client) ListEfakturas(q *EfakturaListQuery) ([]Efaktura, error) {
+func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
 
 	if q != nil {
@@ -83,7 +84,7 @@ func (c *Client) ListEfakturas(q *EfakturaListQuery) ([]Efaktura, error) {
 		url = fmt.Sprintf("%s?%s", url, qs)
 	}
 
-	res, sc, err := c.request(&httpRequest{
+	res, sc, err := c.request(ctx, &httpRequest{
 		method: http.MethodGet,
 		url:    url,
 	})
@@ -104,7 +105,7 @@ func (c *Client) ListEfakturas(q *EfakturaListQuery) ([]Efaktura, error) {
 	return data.Efakturas, nil
 }
 
-func (c *Client) PayEfaktura(q *EfakturaPayQuery) error {
+func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 	if q == nil {
 		return errors.New("No EfakturaPayQuery passed")
 	}

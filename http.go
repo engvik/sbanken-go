@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -11,8 +12,8 @@ type httpRequest struct {
 	url    string
 }
 
-func (c *Client) request(r *httpRequest) ([]byte, int, error) {
-	token, err := c.getToken()
+func (c *Client) request(ctx context.Context, r *httpRequest) ([]byte, int, error) {
+	token, err := c.getToken(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -21,6 +22,8 @@ func (c *Client) request(r *httpRequest) ([]byte, int, error) {
 	if err != nil {
 		return nil, 0, err
 	}
+
+	req = req.WithContext(ctx)
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	req.Header.Set("Accept", "application/json")

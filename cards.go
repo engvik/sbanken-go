@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -17,10 +18,10 @@ type Card struct {
 	AccountNumber int    `json:"accountNumber"`
 }
 
-func (c *Client) ListCards() ([]Card, error) {
+func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 	url := fmt.Sprintf("%s/v1/Cards", c.baseURL)
 
-	res, sc, err := c.request(&httpRequest{
+	res, sc, err := c.request(ctx, &httpRequest{
 		method: http.MethodGet,
 		url:    url,
 	})
