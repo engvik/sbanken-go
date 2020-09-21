@@ -11,6 +11,7 @@ type Account struct {
 	Name        string  `json:"name"`
 	Type        string  `json:"accountType"`
 	Available   float32 `json:"available"`
+	Balance     float32 `json:"balance"`
 	CreditLimit float32 `json:"creditLimit"`
 	Number      int     `json:"accountNumber"`
 }
