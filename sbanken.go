@@ -11,9 +11,10 @@ import (
 )
 
 type Client struct {
-	HTTP   *http.Client
-	config *Config
-	auth   auth
+	HTTP    *http.Client
+	config  *Config
+	auth    *auth
+	baseURL string
 }
 
 type auth struct {
@@ -32,6 +33,7 @@ func NewClient(cfg *Config, httpClient *http.Client) (*Client, error) {
 	c := &Client{}
 	c.setHTTPClient(httpClient)
 	c.config = cfg
+	c.baseURL = "https://api.sbanken.no/exec.bank/api"
 
 	if err := c.authorize(cfg); err != nil {
 		return nil, err
@@ -87,7 +89,7 @@ func (c *Client) authorize(cfg *Config) error {
 	exp := time.Now().Add(time.Second * time.Duration(a.ExpiresIn))
 	a.expires = exp
 
-	c.auth = a
+	c.auth = &a
 
 	return nil
 }
@@ -101,4 +103,35 @@ func (c *Client) getToken() (string, error) {
 	}
 
 	return c.auth.AccessToken, nil
+}
+
+func (c *Client) request(url string) ([]byte, int, error) {
+	token, err := c.getToken()
+	if err != nil {
+		return nil, 0, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("customerId", c.config.CustomerID)
+
+	res, err := c.HTTP.Do(req)
+	if err != nil {
+		return nil, res.StatusCode, err
+	}
+
+	defer res.Body.Close()
+
+	data, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, res.StatusCode, err
+	}
+
+	return data, res.StatusCode, nil
+
 }
