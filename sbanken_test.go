@@ -18,7 +18,7 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	a, err := c.ListEfakturas()
+	a, err := c.ListEfakturas(&EfakturaQuery{Status: "NEW"})
 	if err != nil {
 		t.Fatal(err)
 	}
