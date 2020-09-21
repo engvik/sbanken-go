@@ -9,13 +9,15 @@ func (ce *ConfigError) Error() string {
 }
 
 var (
-	ErrNoClientID    = &ConfigError{"No client ID"}
-	ErNoClientSecret = &ConfigError{"No client secret"}
+	ErrNoClientID     = &ConfigError{"No client ID"}
+	ErrNoClientSecret = &ConfigError{"No client secret"}
+	ErrNoCustomerID   = &ConfigError{"No customer ID"}
 )
 
 type Config struct {
 	ClientID     string
 	ClientSecret string
+	CustomerID   string
 }
 
 func (c *Config) validate() error {
@@ -24,7 +26,11 @@ func (c *Config) validate() error {
 	}
 
 	if c.ClientSecret == "" {
-		return ErNoClientSecret
+		return ErrNoClientSecret
+	}
+
+	if c.CustomerID == "" {
+		return ErrNoCustomerID
 	}
 
 	return nil

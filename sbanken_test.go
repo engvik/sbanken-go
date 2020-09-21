@@ -10,6 +10,7 @@ func TestNewClient(t *testing.T) {
 	cfg := &Config{
 		ClientID:     os.Getenv("CLIENT_ID"),
 		ClientSecret: os.Getenv("CLIENT_SECRET"),
+		CustomerID:   os.Getenv("CUSTOMER_ID"),
 	}
 
 	c, err := NewClient(cfg, nil)
@@ -17,5 +18,15 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	log.Println(c.getToken())
+	a, err := c.ListAccounts()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	acc, err := c.ListAccount(a[0].ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	log.Println(acc)
 }
