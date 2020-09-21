@@ -18,7 +18,7 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	a, err := c.ListCards()
+	a, err := c.ListEfakturas()
 	if err != nil {
 		t.Fatal(err)
 	}
