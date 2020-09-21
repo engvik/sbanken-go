@@ -1,7 +1,6 @@
 package sbanken
 
 import (
-	"log"
 	"os"
 	"testing"
 )
@@ -18,10 +17,17 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	a, err := c.ListEfakturas(&EfakturaListQuery{Status: "NEW"})
+	err = c.PayEfaktura(&EfakturaPayQuery{})
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	log.Printf("%+v", a)
+	/*
+		a, err := c.ListEfakturas(&EfakturaListQuery{Status: "NEW"})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		log.Printf("%+v", a)
+	*/
 }

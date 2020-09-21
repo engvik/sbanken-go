@@ -19,7 +19,10 @@ type Account struct {
 func (c *Client) ListAccounts() ([]Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts", c.baseURL)
 
-	res, sc, err := c.request(url)
+	res, sc, err := c.request(&httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +43,10 @@ func (c *Client) ListAccounts() ([]Account, error) {
 func (c *Client) ListAccount(accountID string) (Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
 
-	res, sc, err := c.request(url)
+	res, sc, err := c.request(&httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
 	if err != nil {
 		return Account{}, err
 	}

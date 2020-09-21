@@ -20,7 +20,10 @@ type Card struct {
 func (c *Client) ListCards() ([]Card, error) {
 	url := fmt.Sprintf("%s/v1/Cards", c.baseURL)
 
-	res, sc, err := c.request(url)
+	res, sc, err := c.request(&httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
 	if err != nil {
 		return nil, err
 	}

@@ -6,13 +6,18 @@ import (
 	"net/http"
 )
 
-func (c *Client) request(url string) ([]byte, int, error) {
+type httpRequest struct {
+	method string
+	url    string
+}
+
+func (c *Client) request(r *httpRequest) ([]byte, int, error) {
 	token, err := c.getToken()
 	if err != nil {
 		return nil, 0, err
 	}
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(r.method, r.url, nil)
 	if err != nil {
 		return nil, 0, err
 	}
