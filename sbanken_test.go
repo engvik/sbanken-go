@@ -34,4 +34,11 @@ func TestNewClient(t *testing.T) {
 	}
 
 	log.Printf("%+v", e)
+
+	p, err := c.ReadPayment(ctx, a[0].ID, e[0].ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	log.Printf("%+v", p)
 }

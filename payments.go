@@ -83,3 +83,29 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 
 	return data.Payments, nil
 }
+
+func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID string) (Payment, error) {
+	url := fmt.Sprintf("%s/v1/Payments/%s/%s", c.baseURL, accountID, paymentID)
+
+	res, sc, err := c.request(ctx, &httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
+	if err != nil {
+		return Payment{}, err
+	}
+
+	if sc != http.StatusOK {
+		return Payment{}, fmt.Errorf("unexpected status code: %d", sc)
+	}
+
+	data := struct {
+		Payment Payment `json:"item"`
+	}{}
+
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Payment, err
+	}
+
+	return data.Payment, nil
+}
