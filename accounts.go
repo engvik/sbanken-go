@@ -41,7 +41,7 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 	return data.Accounts, nil
 }
 
-func (c *Client) ListAccount(ctx context.Context, accountID string) (Account, error) {
+func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
 
 	res, sc, err := c.request(ctx, &httpRequest{
