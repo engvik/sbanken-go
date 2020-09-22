@@ -111,6 +111,18 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas/new", c.baseURL)
 
+	if !q.StartDate.IsZero() {
+		return nil, errors.New("StartDate is not valid for ListNewEfakturas")
+	}
+
+	if !q.EndDate.IsZero() {
+		return nil, errors.New("EndDate is not valid for ListNewEfakturas")
+	}
+
+	if q.Status != "" {
+		return nil, errors.New("Status is not valid for ListNewEfakturas")
+	}
+
 	return c.listEfakturas(ctx, url, q)
 }
 
