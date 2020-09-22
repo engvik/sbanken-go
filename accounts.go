@@ -11,10 +11,10 @@ type Account struct {
 	ID          string  `json:"accountId"`
 	Name        string  `json:"name"`
 	Type        string  `json:"accountType"`
+	Number      string  `json:"accountNumber"`
 	Available   float32 `json:"available"`
 	Balance     float32 `json:"balance"`
 	CreditLimit float32 `json:"creditLimit"`
-	Number      int     `json:"accountNumber"`
 }
 
 func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
