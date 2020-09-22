@@ -28,7 +28,7 @@ func TestNewClient(t *testing.T) {
 
 	log.Printf("%+v", a)
 
-	e, err := c.ListStandingOrders(ctx, a[0].ID)
+	e, err := c.ListTransactions(ctx, a[0].ID, nil)
 	if err != nil {
 		t.Fatal(err)
 	}
