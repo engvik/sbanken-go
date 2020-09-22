@@ -27,10 +27,4 @@ func TestNewClient(t *testing.T) {
 	}
 
 	log.Printf("%+v", a)
-
-	err = c.PayEfaktura(ctx, &EfakturaPayQuery{})
-	if err != nil {
-		t.Fatal(err)
-	}
-
 }

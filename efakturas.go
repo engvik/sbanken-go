@@ -76,34 +76,7 @@ type EfakturaPayQuery struct {
 func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
 
-	if q != nil {
-		qs, err := q.QueryString(url)
-		if err != nil {
-			return nil, err
-		}
-
-		url = fmt.Sprintf("%s?%s", url, qs)
-	}
-
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
-	data := struct {
-		Efakturas []Efaktura `json:"items"`
-	}{}
-
-	json.Unmarshal(res, &data)
-
-	return data.Efakturas, nil
+	return c.listEfakturas(ctx, url, q)
 }
 
 func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
@@ -133,4 +106,42 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 	}
 
 	return nil
+}
+
+func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
+	url := fmt.Sprintf("%s/v1/Efakturas/new", c.baseURL)
+
+	return c.listEfakturas(ctx, url, q)
+}
+
+func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQuery) ([]Efaktura, error) {
+	if q != nil {
+		qs, err := q.QueryString(url)
+		if err != nil {
+			return nil, err
+		}
+
+		url = fmt.Sprintf("%s?%s", url, qs)
+	}
+
+	res, sc, err := c.request(ctx, &httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if sc != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", sc)
+	}
+
+	data := struct {
+		Efakturas []Efaktura `json:"items"`
+	}{}
+
+	json.Unmarshal(res, &data)
+
+	return data.Efakturas, nil
+
 }
