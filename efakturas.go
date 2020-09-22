@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -108,6 +109,27 @@ func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efa
 func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 	if q == nil {
 		return errors.New("No EfakturaPayQuery passed")
+	}
+
+	payload, err := json.Marshal(q)
+	if err != nil {
+		return err
+	}
+
+	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
+
+	res, sc, err := c.request(ctx, &httpRequest{
+		method:      http.MethodPost,
+		url:         url,
+		postPayload: payload,
+	})
+	log.Println(string(res))
+	if err != nil {
+		return err
+	}
+
+	if sc != http.StatusOK {
+		return fmt.Errorf("unexpected status code: %d", sc)
 	}
 
 	return nil
