@@ -37,7 +37,9 @@ func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 		Cards []Card `json:"items"`
 	}{}
 
-	json.Unmarshal(res, &data)
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Cards, err
+	}
 
 	return data.Cards, nil
 }

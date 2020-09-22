@@ -36,7 +36,9 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 		Accounts []Account `json:"items"`
 	}{}
 
-	json.Unmarshal(res, &data)
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Accounts, err
+	}
 
 	return data.Accounts, nil
 }
@@ -60,7 +62,9 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 		Account Account `json:"item"`
 	}{}
 
-	json.Unmarshal(res, &data)
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Account, err
+	}
 
 	return data.Account, nil
 }
