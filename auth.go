@@ -2,6 +2,7 @@ package sbanken
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -10,7 +11,7 @@ import (
 	"time"
 )
 
-func (c *Client) authorize(cfg *Config) error {
+func (c *Client) authorize(ctx context.Context, cfg *Config) error {
 	authURL := "https://auth.sbanken.no/identityserver/connect/token"
 	payload := []byte("grant_type=client_credentials")
 
@@ -18,6 +19,8 @@ func (c *Client) authorize(cfg *Config) error {
 	if err != nil {
 		return err
 	}
+
+	req = req.WithContext(ctx)
 
 	req.SetBasicAuth(url.QueryEscape(cfg.ClientID), url.QueryEscape(cfg.ClientSecret))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
@@ -53,9 +56,9 @@ func (c *Client) authorize(cfg *Config) error {
 	return nil
 }
 
-func (c *Client) getToken() (string, error) {
+func (c *Client) getToken(ctx context.Context) (string, error) {
 	if time.Now().After(c.auth.expires) {
-		err := c.authorize(c.config)
+		err := c.authorize(ctx, c.config)
 		if err != nil {
 			return "", fmt.Errorf("error renewing token: %w", err)
 		}

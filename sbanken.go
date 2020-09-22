@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"net/http"
 	"time"
 )
@@ -20,7 +21,7 @@ type auth struct {
 	expires     time.Time
 }
 
-func NewClient(cfg *Config, httpClient *http.Client) (*Client, error) {
+func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Client, error) {
 	if err := cfg.validate(); err != nil {
 		return nil, err
 	}
@@ -30,7 +31,7 @@ func NewClient(cfg *Config, httpClient *http.Client) (*Client, error) {
 	c.config = cfg
 	c.baseURL = "https://api.sbanken.no/exec.bank/api"
 
-	if err := c.authorize(cfg); err != nil {
+	if err := c.authorize(ctx, cfg); err != nil {
 		return nil, err
 	}
 

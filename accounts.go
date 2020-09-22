@@ -1,6 +1,7 @@
 package sbanken
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -16,10 +17,13 @@ type Account struct {
 	Number      int     `json:"accountNumber"`
 }
 
-func (c *Client) ListAccounts() ([]Account, error) {
+func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts", c.baseURL)
 
-	res, sc, err := c.request(url)
+	res, sc, err := c.request(ctx, &httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -32,15 +36,20 @@ func (c *Client) ListAccounts() ([]Account, error) {
 		Accounts []Account `json:"items"`
 	}{}
 
-	json.Unmarshal(res, &data)
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Accounts, err
+	}
 
 	return data.Accounts, nil
 }
 
-func (c *Client) ListAccount(accountID string) (Account, error) {
+func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
 
-	res, sc, err := c.request(url)
+	res, sc, err := c.request(ctx, &httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
 	if err != nil {
 		return Account{}, err
 	}
@@ -53,7 +62,9 @@ func (c *Client) ListAccount(accountID string) (Account, error) {
 		Account Account `json:"item"`
 	}{}
 
-	json.Unmarshal(res, &data)
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Account, err
+	}
 
 	return data.Account, nil
 }
