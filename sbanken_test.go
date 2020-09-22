@@ -27,4 +27,11 @@ func TestNewClient(t *testing.T) {
 	}
 
 	log.Printf("%+v", a)
+
+	e, err := c.ReadEfaktura(ctx, a[0].ID)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	log.Printf("%+v", e)
 }

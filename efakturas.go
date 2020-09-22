@@ -126,6 +126,32 @@ func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]
 	return c.listEfakturas(ctx, url, q)
 }
 
+func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura, error) {
+	url := fmt.Sprintf("%s/v1/Efakturas/%s", c.baseURL, efakturaID)
+
+	res, sc, err := c.request(ctx, &httpRequest{
+		method: http.MethodGet,
+		url:    url,
+	})
+	if err != nil {
+		return Efaktura{}, err
+	}
+
+	if sc != http.StatusOK {
+		return Efaktura{}, fmt.Errorf("unexpected status code: %d", sc)
+	}
+
+	data := struct {
+		Efaktura Efaktura `json:"item"`
+	}{}
+
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Efaktura, err
+	}
+
+	return data.Efaktura, nil
+}
+
 func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQuery) ([]Efaktura, error) {
 	if q != nil {
 		qs, err := q.QueryString(url)
@@ -152,7 +178,9 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 		Efakturas []Efaktura `json:"items"`
 	}{}
 
-	json.Unmarshal(res, &data)
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Efakturas, err
+	}
 
 	return data.Efakturas, nil
 
