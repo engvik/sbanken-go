@@ -28,17 +28,10 @@ func TestNewClient(t *testing.T) {
 
 	log.Printf("%+v", a)
 
-	e, err := c.ListPayments(ctx, a[0].ID, nil)
+	e, err := c.ListStandingOrders(ctx, a[0].ID)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	log.Printf("%+v", e)
-
-	p, err := c.ReadPayment(ctx, a[0].ID, e[0].ID)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	log.Printf("%+v", p)
 }
