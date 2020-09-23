@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
 type Account struct {
@@ -20,9 +22,9 @@ type Account struct {
 func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts", c.baseURL)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("request: %w", err)
@@ -30,7 +32,7 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 
 	data := struct {
 		Accounts []Account `json:"items"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
@@ -57,9 +59,9 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 
 	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return Account{}, fmt.Errorf("request: %w", err)
@@ -67,7 +69,7 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 
 	data := struct {
 		Account Account `json:"item"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

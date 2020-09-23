@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
 type Transaction struct {
@@ -98,9 +100,9 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 		url = fmt.Sprintf("%s?%s", url, qs)
 	}
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("request: %w", err)
@@ -108,7 +110,7 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 
 	data := struct {
 		Transactions []Transaction `json:"items"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

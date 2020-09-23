@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
 type Card struct {
@@ -21,9 +23,9 @@ type Card struct {
 func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 	url := fmt.Sprintf("%s/v1/Cards", c.baseURL)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("request: %w", err)
@@ -31,7 +33,7 @@ func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 
 	data := struct {
 		Cards []Card `json:"items"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
