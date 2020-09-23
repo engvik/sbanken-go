@@ -54,7 +54,7 @@ func (c *Client) Request(ctx context.Context, r *HTTPRequest) ([]byte, int, erro
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("customerId", c.customerID)
 
-	res, err := c.HTTP.Do(req)
+	res, err := c.http.Do(req)
 	if err != nil {
 		return nil, res.StatusCode, err
 	}

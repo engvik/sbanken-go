@@ -34,7 +34,7 @@ func (c *Client) authorize(ctx context.Context) error {
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
 	req.Header.Set("Accept", "application/json")
 
-	res, err := c.HTTP.Do(req)
+	res, err := c.http.Do(req)
 	if err != nil {
 		return err
 	}

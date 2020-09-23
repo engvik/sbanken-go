@@ -10,7 +10,7 @@ type Client struct {
 	clientID     string
 	clientSecret string
 	customerID   string
-	HTTP         *http.Client
+	http         *http.Client
 	auth         *auth
 }
 
@@ -38,9 +38,9 @@ func New(ctx context.Context, cfg *Config, httpClient *http.Client) (*Client, er
 
 func (c *Client) setHTTPClient(httpClient *http.Client) {
 	if httpClient == nil {
-		c.HTTP = http.DefaultClient
+		c.http = http.DefaultClient
 		return
 	}
 
-	c.HTTP = httpClient
+	c.http = httpClient
 }
