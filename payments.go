@@ -50,12 +50,16 @@ func (q *PaymentListQuery) QueryString(u string) (string, error) {
 }
 
 func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentListQuery) ([]Payment, error) {
+	if accountID == "" {
+		return nil, ErrMissingAccountID
+	}
+
 	url := fmt.Sprintf("%s/v1/Payments/%s", c.baseURL, accountID)
 
 	if q != nil {
 		qs, err := q.QueryString(url)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("QueryString: %w", err)
 		}
 
 		url = fmt.Sprintf("%s?%s", url, qs)
@@ -66,7 +70,7 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 		url:    url,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -75,7 +79,7 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.Payments, err
+		return data.Payments, fmt.Errorf("Unmarshal: %w", err)
 	}
 
 	if data.IsError || sc != http.StatusOK {
@@ -92,6 +96,14 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 }
 
 func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID string) (Payment, error) {
+	if accountID == "" {
+		return Payment{}, ErrMissingAccountID
+	}
+
+	if paymentID == "" {
+		return Payment{}, ErrMissingPaymentID
+	}
+
 	url := fmt.Sprintf("%s/v1/Payments/%s/%s", c.baseURL, accountID, paymentID)
 
 	res, sc, err := c.request(ctx, &httpRequest{
@@ -99,7 +111,7 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 		url:    url,
 	})
 	if err != nil {
-		return Payment{}, err
+		return Payment{}, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -108,7 +120,7 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.Payment, err
+		return data.Payment, fmt.Errorf("Unmarshal: %w", err)
 	}
 
 	if data.IsError || sc != http.StatusOK {

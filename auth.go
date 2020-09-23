@@ -17,7 +17,7 @@ func (c *Client) authorize(ctx context.Context, cfg *Config) error {
 
 	req, err := http.NewRequest(http.MethodPost, authURL, bytes.NewBuffer(payload))
 	if err != nil {
-		return err
+		return fmt.Errorf("NewRequest: %w", err)
 	}
 
 	req = req.WithContext(ctx)
@@ -28,24 +28,23 @@ func (c *Client) authorize(ctx context.Context, cfg *Config) error {
 
 	res, err := c.HTTP.Do(req)
 	if err != nil {
-		return err
+		return fmt.Errorf("Do: %w", err)
 	}
 
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		// TODO: Handle error from body
 		return fmt.Errorf("unexpected status code: %d", res.StatusCode)
 	}
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return err
+		return fmt.Errorf("ReadAll: %w", err)
 	}
 
 	var a auth
 	if err := json.Unmarshal(data, &a); err != nil {
-		return err
+		return fmt.Errorf("Unmarshal: %w", err)
 	}
 
 	exp := time.Now().Add(time.Second * time.Duration(a.ExpiresIn))
@@ -60,7 +59,7 @@ func (c *Client) getToken(ctx context.Context) (string, error) {
 	if time.Now().After(c.auth.expires) {
 		err := c.authorize(ctx, c.config)
 		if err != nil {
-			return "", fmt.Errorf("error renewing token: %w", err)
+			return "", fmt.Errorf("Error renewing token: %w", err)
 		}
 	}
 

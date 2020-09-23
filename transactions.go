@@ -92,7 +92,7 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 	if q != nil {
 		qs, err := q.QueryString(url)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("QueryString: %w", err)
 		}
 
 		url = fmt.Sprintf("%s?%s", url, qs)
@@ -103,7 +103,7 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 		url:    url,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -112,7 +112,7 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.Transactions, err
+		return data.Transactions, fmt.Errorf("Unmarshal: %w", err)
 	}
 
 	if data.IsError || sc != http.StatusOK {

@@ -3,7 +3,6 @@ package sbanken
 import (
 	"bytes"
 	"context"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -27,7 +26,7 @@ type httpResponse struct {
 func (c *Client) request(ctx context.Context, r *httpRequest) ([]byte, int, error) {
 	token, err := c.getToken(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("getToken: %w", err)
 	}
 
 	var req *http.Request
@@ -37,15 +36,15 @@ func (c *Client) request(ctx context.Context, r *httpRequest) ([]byte, int, erro
 		req, err = http.NewRequest(r.method, r.url, nil)
 	case http.MethodPost:
 		if r.postPayload == nil {
-			return nil, 0, errors.New("Post payload missing from POST")
+			return nil, 0, ErrMissingPostPayload
 		}
 		req, err = http.NewRequest(r.method, r.url, bytes.NewBuffer(r.postPayload))
 	default:
-		return nil, 0, fmt.Errorf("Invalid HTTP request method: %s", r.method)
+		return nil, 0, fmt.Errorf("HTTP request method not supported: %s", r.method)
 	}
 
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("NewRequest: %w", err)
 	}
 
 	req = req.WithContext(ctx)
@@ -56,16 +55,15 @@ func (c *Client) request(ctx context.Context, r *httpRequest) ([]byte, int, erro
 
 	res, err := c.HTTP.Do(req)
 	if err != nil {
-		return nil, res.StatusCode, err
+		return nil, res.StatusCode, fmt.Errorf("Do: %w", err)
 	}
 
 	defer res.Body.Close()
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, res.StatusCode, err
+		return nil, res.StatusCode, fmt.Errorf("ReadAll: %w", err)
 	}
 
 	return data, res.StatusCode, nil
-
 }

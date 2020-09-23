@@ -24,6 +24,10 @@ type StandingOrder struct {
 }
 
 func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]StandingOrder, error) {
+	if accountID == "" {
+		return nil, ErrMissingAccountID
+	}
+
 	url := fmt.Sprintf("%s/v1/StandingOrders/%s", c.baseURL, accountID)
 
 	res, sc, err := c.request(ctx, &httpRequest{
@@ -31,7 +35,7 @@ func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]St
 		url:    url,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -40,7 +44,7 @@ func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]St
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.StandingOrders, err
+		return data.StandingOrders, fmt.Errorf("Unmarshal: %w", err)
 	}
 
 	if data.IsError || sc != http.StatusOK {
