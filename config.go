@@ -5,7 +5,7 @@ type Config struct {
 	ClientID     string
 	ClientSecret string
 	CustomerID   string
-	SkipAuth     bool
+	skipAuth     bool
 }
 
 func (c *Config) validate() error {

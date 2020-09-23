@@ -10,7 +10,7 @@ func TestNewClient(t *testing.T) {
 		ClientID:     "some-client-id",
 		ClientSecret: "some-client-secret",
 		CustomerID:   "some-customer-id",
-		SkipAuth:     true,
+		skipAuth:     true,
 	}
 
 	ctx := context.Background()

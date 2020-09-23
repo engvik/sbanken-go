@@ -41,7 +41,7 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 		transport: transport.New(ctx, tCfg, httpClient),
 	}
 
-	if !cfg.SkipAuth {
+	if !cfg.skipAuth {
 		if err := c.transport.Authorize(ctx); err != nil {
 			return c, fmt.Errorf("Authorize: %w", err)
 		}
