@@ -3,7 +3,6 @@ package sbanken
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -75,17 +74,17 @@ type EfakturaPayQuery struct {
 func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
 
-	return c.listEfakturas(ctx, url, q)
+	return c.listEfakturas(ctx, url, q, "ListEfakturas")
 }
 
 func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 	if q == nil {
-		return errors.New("No EfakturaPayQuery passed")
+		return ErrMissingEfakturaQuery
 	}
 
 	payload, err := json.Marshal(q)
 	if err != nil {
-		return err
+		return fmt.Errorf("Marshal: %w", err)
 	}
 
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
@@ -96,16 +95,22 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 		postPayload: payload,
 	})
 	if err != nil {
-		return err
-	}
-
-	if sc != http.StatusOK {
-		return fmt.Errorf("unexpected status code: %d", sc)
+		return fmt.Errorf("request: %w", err)
 	}
 
 	var data httpResponse
 	if err := json.Unmarshal(res, &data); err != nil {
-		return err
+		return fmt.Errorf("Unmarshal: %w", err)
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return &Error{
+			"PayEfaktura",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return nil
@@ -115,21 +120,25 @@ func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]
 	url := fmt.Sprintf("%s/v1/Efakturas/new", c.baseURL)
 
 	if !q.StartDate.IsZero() {
-		return nil, errors.New("StartDate is not valid for ListNewEfakturas")
+		return nil, ErrNotValidOptionStartDate
 	}
 
 	if !q.EndDate.IsZero() {
-		return nil, errors.New("EndDate is not valid for ListNewEfakturas")
+		return nil, ErrNotValidOptionEndDate
 	}
 
 	if q.Status != "" {
-		return nil, errors.New("Status is not valid for ListNewEfakturas")
+		return nil, ErrNotValidOptionStatus
 	}
 
-	return c.listEfakturas(ctx, url, q)
+	return c.listEfakturas(ctx, url, q, "ListNewEfakturas")
 }
 
 func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura, error) {
+	if efakturaID == "" {
+		return Efaktura{}, ErrMissingEfakturaID
+	}
+
 	url := fmt.Sprintf("%s/v1/Efakturas/%s", c.baseURL, efakturaID)
 
 	res, sc, err := c.request(ctx, &httpRequest{
@@ -137,11 +146,7 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 		url:    url,
 	})
 	if err != nil {
-		return Efaktura{}, err
-	}
-
-	if sc != http.StatusOK {
-		return Efaktura{}, fmt.Errorf("unexpected status code: %d", sc)
+		return Efaktura{}, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -150,17 +155,27 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.Efaktura, err
+		return data.Efaktura, fmt.Errorf("Unmarshal: %w", err)
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Efaktura, &Error{
+			"ReadEfaktura",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Efaktura, nil
 }
 
-func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQuery) ([]Efaktura, error) {
+func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQuery, caller string) ([]Efaktura, error) {
 	if q != nil {
 		qs, err := q.QueryString(url)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("QueryString: %w", err)
 		}
 
 		url = fmt.Sprintf("%s?%s", url, qs)
@@ -171,11 +186,7 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 		url:    url,
 	})
 	if err != nil {
-		return nil, err
-	}
-
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
+		return nil, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -184,9 +195,18 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.Efakturas, err
+		return data.Efakturas, fmt.Errorf("Unmarshal: %w", err)
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Efakturas, &Error{
+			caller,
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Efakturas, nil
-
 }

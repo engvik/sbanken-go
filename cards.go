@@ -26,11 +26,7 @@ func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 		url:    url,
 	})
 	if err != nil {
-		return nil, err
-	}
-
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
+		return nil, fmt.Errorf("request: %w", err)
 	}
 
 	data := struct {
@@ -39,7 +35,17 @@ func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
-		return data.Cards, err
+		return data.Cards, fmt.Errorf("Unmarshal: %w", err)
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Cards, &Error{
+			"ListCards",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Cards, nil
