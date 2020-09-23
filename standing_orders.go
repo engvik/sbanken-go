@@ -40,6 +40,7 @@ func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]St
 
 	data := struct {
 		StandingOrders []StandingOrder `json:"items"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
