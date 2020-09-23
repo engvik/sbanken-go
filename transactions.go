@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -111,10 +110,9 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 		return nil, fmt.Errorf("unexpected status code: %d", sc)
 	}
 
-	log.Println(string(res))
-
 	data := struct {
 		Transactions []Transaction `json:"items"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

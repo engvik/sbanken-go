@@ -15,6 +15,15 @@ type httpRequest struct {
 	postPayload []byte
 }
 
+type httpResponse struct {
+	TraceID        string `json:"traceId"`
+	ErrorType      string `json:"errorType"`
+	ErrorMessage   string `json:"errorMessage"`
+	AvailableItems int    `json:"availableItems"`
+	ErrorCode      int    `json:"errorCode"`
+	IsError        bool   `json:"isError"`
+}
+
 func (c *Client) request(ctx context.Context, r *httpRequest) ([]byte, int, error) {
 	token, err := c.getToken(ctx)
 	if err != nil {

@@ -34,6 +34,7 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 
 	data := struct {
 		Accounts []Account `json:"items"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
@@ -60,6 +61,7 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 
 	data := struct {
 		Account Account `json:"item"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

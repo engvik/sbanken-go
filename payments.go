@@ -75,6 +75,7 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 
 	data := struct {
 		Payments []Payment `json:"items"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
@@ -101,6 +102,7 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 
 	data := struct {
 		Payment Payment `json:"item"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

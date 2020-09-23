@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -33,13 +32,17 @@ func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 		url:         url,
 		postPayload: payload,
 	})
-	log.Println(string(res))
 	if err != nil {
 		return err
 	}
 
 	if sc != http.StatusOK {
 		return fmt.Errorf("unexpected status code: %d", sc)
+	}
+
+	var data httpResponse
+	if err := json.Unmarshal(res, &data); err != nil {
+		return err
 	}
 
 	return nil

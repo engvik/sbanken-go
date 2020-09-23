@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -96,13 +95,17 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 		url:         url,
 		postPayload: payload,
 	})
-	log.Println(string(res))
 	if err != nil {
 		return err
 	}
 
 	if sc != http.StatusOK {
 		return fmt.Errorf("unexpected status code: %d", sc)
+	}
+
+	var data httpResponse
+	if err := json.Unmarshal(res, &data); err != nil {
+		return err
 	}
 
 	return nil
@@ -143,6 +146,7 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 
 	data := struct {
 		Efaktura Efaktura `json:"item"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
@@ -176,6 +180,7 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 
 	data := struct {
 		Efakturas []Efaktura `json:"items"`
+		httpResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
