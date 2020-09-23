@@ -7,13 +7,28 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+var (
+	testListAccountsEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
+	testReadAccountEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
+	testFailAccountEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Accounts/fail-account"
+)
+
 type testTransportClient struct{}
 
-func (c *testTransportClient) Authorize(context.Context) error {
+func (c testTransportClient) Authorize(ctx context.Context) error {
 	return nil
 }
 
-func (c *testTransportClient) Request(context.Context, *transport.HTTPRequest) ([]byte, int, error) {
+func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPRequest) ([]byte, int, error) {
+	switch r.URL {
+	case testListAccountsEndpoint:
+		return testListAccountsEndpointResponse()
+	case testReadAccountEndpoint:
+		return testReadAccountEndpointResponse()
+	case testReadAccountFailEndpoint:
+		return testReadAccountEndpointResponse()
+	}
+
 	return nil, 0, nil
 }
 
