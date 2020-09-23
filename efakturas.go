@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
 type Efaktura struct {
@@ -89,16 +91,16 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method:      http.MethodPost,
-		url:         url,
-		postPayload: payload,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method:      http.MethodPost,
+		URL:         url,
+		PostPayload: payload,
 	})
 	if err != nil {
 		return fmt.Errorf("request: %w", err)
 	}
 
-	var data httpResponse
+	var data transport.HTTPResponse
 	if err := json.Unmarshal(res, &data); err != nil {
 		return fmt.Errorf("Unmarshal: %w", err)
 	}
@@ -141,9 +143,9 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 
 	url := fmt.Sprintf("%s/v1/Efakturas/%s", c.baseURL, efakturaID)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return Efaktura{}, fmt.Errorf("request: %w", err)
@@ -151,7 +153,7 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 
 	data := struct {
 		Efaktura Efaktura `json:"item"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
@@ -181,9 +183,9 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 		url = fmt.Sprintf("%s?%s", url, qs)
 	}
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("request: %w", err)
@@ -191,7 +193,7 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 
 	data := struct {
 		Efakturas []Efaktura `json:"items"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

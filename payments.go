@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
 type Payment struct {
@@ -65,9 +67,9 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 		url = fmt.Sprintf("%s?%s", url, qs)
 	}
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("request: %w", err)
@@ -75,7 +77,7 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 
 	data := struct {
 		Payments []Payment `json:"items"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {
@@ -106,9 +108,9 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 
 	url := fmt.Sprintf("%s/v1/Payments/%s/%s", c.baseURL, accountID, paymentID)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method: http.MethodGet,
-		url:    url,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
 	})
 	if err != nil {
 		return Payment{}, fmt.Errorf("request: %w", err)
@@ -116,7 +118,7 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 
 	data := struct {
 		Payment Payment `json:"item"`
-		httpResponse
+		transport.HTTPResponse
 	}{}
 
 	if err := json.Unmarshal(res, &data); err != nil {

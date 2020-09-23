@@ -1,20 +1,21 @@
-package sbanken
+package transport
 
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
-type httpRequest struct {
-	method      string
-	url         string
-	postPayload []byte
+type HTTPRequest struct {
+	Method      string
+	URL         string
+	PostPayload []byte
 }
 
-type httpResponse struct {
+type HTTPResponse struct {
 	TraceID        string `json:"traceId"`
 	ErrorType      string `json:"errorType"`
 	ErrorMessage   string `json:"errorMessage"`
@@ -23,46 +24,46 @@ type httpResponse struct {
 	IsError        bool   `json:"isError"`
 }
 
-func (c *Client) request(ctx context.Context, r *httpRequest) ([]byte, int, error) {
+func (c *Client) Request(ctx context.Context, r *HTTPRequest) ([]byte, int, error) {
 	token, err := c.getToken(ctx)
 	if err != nil {
-		return nil, 0, fmt.Errorf("getToken: %w", err)
+		return nil, 0, err
 	}
 
 	var req *http.Request
 
-	switch r.method {
+	switch r.Method {
 	case http.MethodGet:
-		req, err = http.NewRequest(r.method, r.url, nil)
+		req, err = http.NewRequest(r.Method, r.URL, nil)
 	case http.MethodPost:
-		if r.postPayload == nil {
-			return nil, 0, ErrMissingPostPayload
+		if r.PostPayload == nil {
+			return nil, 0, errors.New("Post payload missing from POST")
 		}
-		req, err = http.NewRequest(r.method, r.url, bytes.NewBuffer(r.postPayload))
+		req, err = http.NewRequest(r.Method, r.URL, bytes.NewBuffer(r.PostPayload))
 	default:
-		return nil, 0, fmt.Errorf("HTTP request method not supported: %s", r.method)
+		return nil, 0, fmt.Errorf("Invalid HTTP request method: %s", r.Method)
 	}
 
 	if err != nil {
-		return nil, 0, fmt.Errorf("NewRequest: %w", err)
+		return nil, 0, err
 	}
 
 	req = req.WithContext(ctx)
 
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("customerId", c.config.CustomerID)
+	req.Header.Set("customerId", c.customerID)
 
 	res, err := c.HTTP.Do(req)
 	if err != nil {
-		return nil, res.StatusCode, fmt.Errorf("Do: %w", err)
+		return nil, res.StatusCode, err
 	}
 
 	defer res.Body.Close()
 
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, res.StatusCode, fmt.Errorf("ReadAll: %w", err)
+		return nil, res.StatusCode, err
 	}
 
 	return data, res.StatusCode, nil

@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
 type TransferQuery struct {
@@ -26,16 +28,16 @@ func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 
 	url := fmt.Sprintf("%s/v1/Transfers", c.baseURL)
 
-	res, sc, err := c.request(ctx, &httpRequest{
-		method:      http.MethodPost,
-		url:         url,
-		postPayload: payload,
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method:      http.MethodPost,
+		URL:         url,
+		PostPayload: payload,
 	})
 	if err != nil {
 		return fmt.Errorf("request: %w", err)
 	}
 
-	var data httpResponse
+	var data transport.HTTPResponse
 	if err := json.Unmarshal(res, &data); err != nil {
 		return fmt.Errorf("Unmarshal: %w", err)
 	}
