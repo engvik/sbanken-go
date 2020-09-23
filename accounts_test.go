@@ -41,7 +41,11 @@ func testReadAccountEndpointResponse(shouldFail bool) ([]byte, int, error) {
 		transport.HTTPResponse
 	}{
 		testAccount,
-		transport.HTTPResponse{},
+		testHTTPResponseError,
+	}
+
+	if !shouldFail {
+		d.IsError = false
 	}
 
 	b, err := json.Marshal(d)
@@ -50,6 +54,7 @@ func testReadAccountEndpointResponse(shouldFail bool) ([]byte, int, error) {
 	}
 
 	if shouldFail {
+		return b, http.StatusInternalServerError, nil
 	}
 
 	return b, http.StatusOK, nil
@@ -111,11 +116,10 @@ func TestReadAccount(t *testing.T) {
 		},
 		{
 			name:      "should return error when error occurs",
-			accountID: "test-account",
+			accountID: "fail-account",
 			exp:       testAccount,
-			expErr:    nil,
+			expErr:    getTestError("ReadAccount"),
 		},
-
 		{
 			name:      "should return account",
 			accountID: "test-account",
@@ -128,8 +132,10 @@ func TestReadAccount(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			a, err := c.ReadAccount(ctx, tc.accountID)
 			if err != nil {
-				if err != tc.expErr {
-					t.Errorf("unexpected error: got %s, exp %s", err, tc.expErr)
+				errStr := err.Error()
+				expErrStr := tc.expErr.Error()
+				if errStr != expErrStr {
+					t.Errorf("unexpected error: got %s, exp %s", errStr, expErrStr)
 				}
 
 				return

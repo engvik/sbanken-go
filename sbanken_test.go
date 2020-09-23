@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	testListAccountsEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
-	testReadAccountEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
-	testFailAccountEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Accounts/fail-account"
+	testListAccountsEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
+	testReadAccountEndpoint     = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
+	testReadAccountFailEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Accounts/fail-account"
 )
 
 type testTransportClient struct{}
@@ -24,12 +24,29 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListAccountsEndpoint:
 		return testListAccountsEndpointResponse()
 	case testReadAccountEndpoint:
-		return testReadAccountEndpointResponse()
+		return testReadAccountEndpointResponse(false)
 	case testReadAccountFailEndpoint:
-		return testReadAccountEndpointResponse()
+		return testReadAccountEndpointResponse(true)
 	}
 
 	return nil, 0, nil
+}
+
+var testHTTPResponseError = transport.HTTPResponse{
+	IsError:      true,
+	ErrorCode:    100,
+	ErrorMessage: "an error occured",
+	ErrorType:    "Error",
+}
+
+func getTestError(str string) *Error {
+	return &Error{
+		Code:        100,
+		StatusCode:  500,
+		ErrorString: str,
+		Message:     "an error occured",
+		Type:        "Error",
+	}
 }
 
 func newTestClient(ctx context.Context, t *testing.T) (*Client, error) {
