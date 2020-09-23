@@ -14,6 +14,7 @@ import (
 )
 
 type transportClient interface {
+	Authorize(context.Context) error
 	Request(context.Context, *transport.HTTPRequest) ([]byte, int, error)
 }
 
@@ -34,14 +35,16 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 		ClientSecret: cfg.ClientSecret,
 		CustomerID:   cfg.CustomerID,
 	}
-	t, err := transport.New(ctx, tCfg, httpClient)
-	if err != nil {
-		return nil, fmt.Errorf("NewClient: %w", err)
-	}
 
 	c := &Client{
 		baseURL:   "https://api.sbanken.no/exec.bank/api",
-		transport: t,
+		transport: transport.New(ctx, tCfg, httpClient),
+	}
+
+	if !cfg.SkipAuth {
+		if err := c.transport.Authorize(ctx); err != nil {
+			return c, fmt.Errorf("Authorize: %w", err)
+		}
 	}
 
 	return c, nil

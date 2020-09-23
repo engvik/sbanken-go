@@ -19,7 +19,7 @@ type auth struct {
 	expires     time.Time
 }
 
-func (c *Client) authorize(ctx context.Context) error {
+func (c *Client) Authorize(ctx context.Context) error {
 	authURL := "https://auth.sbanken.no/identityserver/connect/token"
 	payload := []byte("grant_type=client_credentials")
 
@@ -66,7 +66,7 @@ func (c *Client) authorize(ctx context.Context) error {
 
 func (c *Client) getToken(ctx context.Context) (string, error) {
 	if time.Now().After(c.auth.expires) {
-		err := c.authorize(ctx)
+		err := c.Authorize(ctx)
 		if err != nil {
 			return "", fmt.Errorf("error renewing token: %w", err)
 		}

@@ -2,7 +2,6 @@ package transport
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 )
 
@@ -20,7 +19,7 @@ type Config struct {
 	CustomerID   string
 }
 
-func New(ctx context.Context, cfg *Config, httpClient *http.Client) (*Client, error) {
+func New(ctx context.Context, cfg *Config, httpClient *http.Client) *Client {
 	c := &Client{
 		clientID:     cfg.ClientID,
 		clientSecret: cfg.ClientSecret,
@@ -29,11 +28,7 @@ func New(ctx context.Context, cfg *Config, httpClient *http.Client) (*Client, er
 
 	c.setHTTPClient(httpClient)
 
-	if err := c.authorize(ctx); err != nil {
-		return nil, fmt.Errorf("authorize: %w", err)
-	}
-
-	return c, nil
+	return c
 }
 
 func (c *Client) setHTTPClient(httpClient *http.Client) {

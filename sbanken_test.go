@@ -2,16 +2,15 @@ package sbanken
 
 import (
 	"context"
-	"log"
-	"os"
 	"testing"
 )
 
 func TestNewClient(t *testing.T) {
 	cfg := &Config{
-		ClientID:     os.Getenv("CLIENT_ID"),
-		ClientSecret: os.Getenv("CLIENT_SECRET"),
-		CustomerID:   os.Getenv("CUSTOMER_ID"),
+		ClientID:     "some-client-id",
+		ClientSecret: "some-client-secret",
+		CustomerID:   "some-customer-id",
+		SkipAuth:     true,
 	}
 
 	ctx := context.Background()
@@ -21,10 +20,16 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	a, err := c.ListAccounts(ctx)
-	if err != nil {
-		t.Fatal(err)
-	}
+	t.Run("should have baseURL set", func(t *testing.T) {
+		exp := "https://api.sbanken.no/exec.bank/api"
+		if c.baseURL != exp {
+			t.Errorf("unexpected baseURL: got %s, exp %s", c.baseURL, exp)
+		}
+	})
 
-	log.Printf("%+v", a)
+	t.Run("should have transport set", func(t *testing.T) {
+		if c.transport == nil {
+			t.Errorf("expected transport to be set")
+		}
+	})
 }
