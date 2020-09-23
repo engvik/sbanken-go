@@ -106,10 +106,6 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 		return nil, err
 	}
 
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Transactions []Transaction `json:"items"`
 		httpResponse
@@ -117,6 +113,16 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 
 	if err := json.Unmarshal(res, &data); err != nil {
 		return data.Transactions, err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Transactions, &Error{
+			"ListTransactions",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Transactions, nil

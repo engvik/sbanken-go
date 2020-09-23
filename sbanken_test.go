@@ -21,7 +21,7 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	a, err := c.ListAccounts(ctx)
+	a, err := c.ReadAccount(ctx, "ff")
 	if err != nil {
 		t.Fatal(err)
 	}

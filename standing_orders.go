@@ -34,10 +34,6 @@ func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]St
 		return nil, err
 	}
 
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		StandingOrders []StandingOrder `json:"items"`
 		httpResponse
@@ -45,6 +41,16 @@ func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]St
 
 	if err := json.Unmarshal(res, &data); err != nil {
 		return data.StandingOrders, err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.StandingOrders, &Error{
+			"ListStandingOrders",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.StandingOrders, nil

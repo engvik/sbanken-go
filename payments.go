@@ -69,10 +69,6 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 		return nil, err
 	}
 
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Payments []Payment `json:"items"`
 		httpResponse
@@ -80,6 +76,16 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 
 	if err := json.Unmarshal(res, &data); err != nil {
 		return data.Payments, err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Payments, &Error{
+			"ListPayments",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Payments, nil
@@ -96,10 +102,6 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 		return Payment{}, err
 	}
 
-	if sc != http.StatusOK {
-		return Payment{}, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Payment Payment `json:"item"`
 		httpResponse
@@ -107,6 +109,16 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 
 	if err := json.Unmarshal(res, &data); err != nil {
 		return data.Payment, err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Payment, &Error{
+			"ReadPayment",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Payment, nil

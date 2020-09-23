@@ -75,7 +75,7 @@ type EfakturaPayQuery struct {
 func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
 
-	return c.listEfakturas(ctx, url, q)
+	return c.listEfakturas(ctx, url, q, "ListEfakturas")
 }
 
 func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
@@ -99,13 +99,19 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 		return err
 	}
 
-	if sc != http.StatusOK {
-		return fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	var data httpResponse
 	if err := json.Unmarshal(res, &data); err != nil {
 		return err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return &Error{
+			"PayEfaktura",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return nil
@@ -126,7 +132,7 @@ func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]
 		return nil, errors.New("Status is not valid for ListNewEfakturas")
 	}
 
-	return c.listEfakturas(ctx, url, q)
+	return c.listEfakturas(ctx, url, q, "ListNewEfakturas")
 }
 
 func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura, error) {
@@ -140,10 +146,6 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 		return Efaktura{}, err
 	}
 
-	if sc != http.StatusOK {
-		return Efaktura{}, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Efaktura Efaktura `json:"item"`
 		httpResponse
@@ -153,10 +155,20 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 		return data.Efaktura, err
 	}
 
+	if data.IsError || sc != http.StatusOK {
+		return data.Efaktura, &Error{
+			"ReadEfaktura",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
+	}
+
 	return data.Efaktura, nil
 }
 
-func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQuery) ([]Efaktura, error) {
+func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQuery, caller string) ([]Efaktura, error) {
 	if q != nil {
 		qs, err := q.QueryString(url)
 		if err != nil {
@@ -174,10 +186,6 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 		return nil, err
 	}
 
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Efakturas []Efaktura `json:"items"`
 		httpResponse
@@ -187,6 +195,15 @@ func (c *Client) listEfakturas(ctx context.Context, url string, q *EfakturaListQ
 		return data.Efakturas, err
 	}
 
-	return data.Efakturas, nil
+	if data.IsError || sc != http.StatusOK {
+		return data.Efakturas, &Error{
+			caller,
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
+	}
 
+	return data.Efakturas, nil
 }

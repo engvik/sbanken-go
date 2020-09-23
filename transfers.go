@@ -36,13 +36,19 @@ func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 		return err
 	}
 
-	if sc != http.StatusOK {
-		return fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	var data httpResponse
 	if err := json.Unmarshal(res, &data); err != nil {
 		return err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return &Error{
+			"ListTransactions",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return nil

@@ -28,10 +28,6 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 		return nil, err
 	}
 
-	if sc != http.StatusOK {
-		return nil, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Accounts []Account `json:"items"`
 		httpResponse
@@ -39,6 +35,16 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 
 	if err := json.Unmarshal(res, &data); err != nil {
 		return data.Accounts, err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return nil, &Error{
+			"ListAccounts",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Accounts, nil
@@ -55,10 +61,6 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 		return Account{}, err
 	}
 
-	if sc != http.StatusOK {
-		return Account{}, fmt.Errorf("unexpected status code: %d", sc)
-	}
-
 	data := struct {
 		Account Account `json:"item"`
 		httpResponse
@@ -66,6 +68,16 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 
 	if err := json.Unmarshal(res, &data); err != nil {
 		return data.Account, err
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Account, &Error{
+			"ReadAccount",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
 	}
 
 	return data.Account, nil
