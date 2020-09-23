@@ -11,6 +11,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// Transaction represents a transaction.
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Transactions%20v1
 type Transaction struct {
 	CardDetails                 CardDetails        `json:"cardDetails"`
 	TransactionDetails          TransactionDetails `json:"transactionDetails"`
@@ -30,6 +32,7 @@ type Transaction struct {
 	TransactionDetailSpecified  bool               `json:"transactionDetailSpecified"`
 }
 
+// CardDetails contains card details about the card used.
 type CardDetails struct {
 	CardNumber                  string  `json:"cardNumber"`
 	MerchantCategoryCode        string  `json:"merchantCategoryCode"`
@@ -43,6 +46,7 @@ type CardDetails struct {
 	CurrencyRate                float32 `json:"currencyRate"`
 }
 
+// TransactionDetails contains transaction details.
 type TransactionDetails struct {
 	ID                     string `json:"transactionId"`
 	FormattedAccountNumber string `json:"formattedAccountNumber"`
@@ -54,6 +58,7 @@ type TransactionDetails struct {
 	NumericReference       int    `json:"numericReference"`
 }
 
+// TransactionListQuery represents query parameters for querying transactions.
 type TransactionListQuery struct {
 	StartDate time.Time
 	EndDate   time.Time
@@ -61,6 +66,7 @@ type TransactionListQuery struct {
 	Length    string
 }
 
+// QueryString translates the query into a query string.
 func (q *TransactionListQuery) QueryString(u string) (string, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
@@ -88,6 +94,7 @@ func (q *TransactionListQuery) QueryString(u string) (string, error) {
 	return query.Encode(), nil
 }
 
+// ListTransactions returns the latest transactions of the given account.
 func (c *Client) ListTransactions(ctx context.Context, accountID string, q *TransactionListQuery) ([]Transaction, error) {
 	url := fmt.Sprintf("%s/v1/Transactions/%s", c.baseURL, accountID)
 

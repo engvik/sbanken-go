@@ -11,6 +11,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// Efaktura represents an efaktura.
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=EFakturas%20v1
 type Efaktura struct {
 	ID                  string  `json:"eFakturaId"`
 	IssuerID            string  `json:"issuerId"`
@@ -28,6 +30,7 @@ type Efaktura struct {
 	CreditAccountNumber int     `json:"creditAccountNumber"`
 }
 
+// EfakturaListQuery represents query parameters for querying efakturas.
 type EfakturaListQuery struct {
 	StartDate time.Time
 	EndDate   time.Time
@@ -36,6 +39,7 @@ type EfakturaListQuery struct {
 	Length    string
 }
 
+// QueryString translates the query into a query string.
 func (q *EfakturaListQuery) QueryString(u string) (string, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
@@ -67,21 +71,24 @@ func (q *EfakturaListQuery) QueryString(u string) (string, error) {
 	return query.Encode(), nil
 }
 
+// EfakturaPayQuery represents a payment query.
 type EfakturaPayQuery struct {
 	ID                   string `json:"eFakturaId"`
 	AccountID            string `json:"accountId"`
 	PayOnlyMinimumAmount bool   `json:"PayOnlyMinimumAmount"`
 }
 
+// ListEfakturas lists efakturas.
 func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
 
 	return c.listEfakturas(ctx, url, q, "ListEfakturas")
 }
 
+// PayEfaktura pays an efaktura. The EfakturaPayQuery are required.
 func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 	if q == nil {
-		return ErrMissingEfakturaQuery
+		return ErrMissingEfakturaPayQuery
 	}
 
 	payload, err := json.Marshal(q)
@@ -118,6 +125,7 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 	return nil
 }
 
+// ListNewEfakturas lists efakturas that have not yet been processed by the customer.
 func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
 	url := fmt.Sprintf("%s/v1/Efakturas/new", c.baseURL)
 
@@ -136,6 +144,7 @@ func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]
 	return c.listEfakturas(ctx, url, q, "ListNewEfakturas")
 }
 
+// ReadEfaktura reads an efaktura. The efakturaID are required.
 func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura, error) {
 	if efakturaID == "" {
 		return Efaktura{}, ErrMissingEfakturaID

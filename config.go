@@ -1,5 +1,6 @@
 package sbanken
 
+// Config represents Sbanken client config.
 type Config struct {
 	ClientID     string
 	ClientSecret string

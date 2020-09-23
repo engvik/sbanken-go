@@ -9,6 +9,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// Card represents a card.
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Cards%20v1
 type Card struct {
 	ID            string `json:"cardId"`
 	Number        string `json:"cardNumber"`
@@ -20,6 +22,7 @@ type Card struct {
 	AccountNumber int    `json:"accountNumber"`
 }
 
+// ListCards lists the cards.
 func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
 	url := fmt.Sprintf("%s/v1/Cards", c.baseURL)
 

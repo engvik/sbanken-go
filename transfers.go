@@ -9,6 +9,7 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// TransferQuery represents the query for transfering between accounts.
 type TransferQuery struct {
 	FromAccountID string  `json:"fromAccountId"`
 	ToAccountID   string  `json:"toAccoundId"`
@@ -16,6 +17,8 @@ type TransferQuery struct {
 	Amount        float32 `json:"amount"`
 }
 
+// Transfer  executes a transfer between two accounts.
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Transfers%20v1
 func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 	if q == nil {
 		return ErrMissingTransferQuery

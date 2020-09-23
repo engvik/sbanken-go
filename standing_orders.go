@@ -9,6 +9,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// StandingOrder represents a standing order (repeated transfers and payments).
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=StandingOrders%20v1
 type StandingOrder struct {
 	FreeTerms              []string `json:"freeTerms"`
 	BeneficiaryName        string   `json:"beneficiaryName"`
@@ -25,6 +27,7 @@ type StandingOrder struct {
 	StandingOrderID        int      `json:"standingOrderId"`
 }
 
+// ListStandingOrders lists the standing orders for repeated transfers and payments. The accoundID are required.
 func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]StandingOrder, error) {
 	if accountID == "" {
 		return nil, ErrMissingAccountID

@@ -9,6 +9,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// Account represents an account.
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Accounts%20v1
 type Account struct {
 	ID          string  `json:"accountId"`
 	Name        string  `json:"name"`
@@ -19,6 +21,7 @@ type Account struct {
 	CreditLimit float32 `json:"creditLimit"`
 }
 
+// ListAccounts lists the accounts.
 func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 	url := fmt.Sprintf("%s/v1/Accounts", c.baseURL)
 
@@ -52,6 +55,7 @@ func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
 	return data.Accounts, nil
 }
 
+// ReadAccount reads an account. The accountID are required.
 func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, error) {
 	if accountID == "" {
 		return Account{}, ErrMissingAccountID

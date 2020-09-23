@@ -10,6 +10,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+// Payment represents a payment.
+// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Payments%20v1
 type Payment struct {
 	AllowedNewStatusTypes  []string `json:"allowedNewStatusTypes"`
 	ID                     string   `json:"paymentId"`
@@ -27,11 +29,13 @@ type Payment struct {
 	IsActive               bool     `json:"isActive"`
 }
 
+// PaymentListQuery represents query parameteres for querying payments.
 type PaymentListQuery struct {
 	Index  string
 	Length string
 }
 
+// QueryString translates the query into a query string.
 func (q *PaymentListQuery) QueryString(u string) (string, error) {
 	parsedURL, err := url.Parse(u)
 	if err != nil {
@@ -51,6 +55,7 @@ func (q *PaymentListQuery) QueryString(u string) (string, error) {
 	return query.Encode(), nil
 }
 
+// ListPayments list the payments. The accountID are required.
 func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentListQuery) ([]Payment, error) {
 	if accountID == "" {
 		return nil, ErrMissingAccountID
@@ -97,6 +102,7 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 	return data.Payments, nil
 }
 
+// ReadPayment reads a payment. The accountID and paymentID are required.
 func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID string) (Payment, error) {
 	if accountID == "" {
 		return Payment{}, ErrMissingAccountID
