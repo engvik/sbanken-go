@@ -3,9 +3,23 @@ package sbanken
 import (
 	"context"
 	"testing"
+
+	"github.com/engvik/sbanken-go/internal/transport"
 )
 
-func TestNewClient(t *testing.T) {
+type testTransportClient struct{}
+
+func (c *testTransportClient) Authorize(context.Context) error {
+	return nil
+}
+
+func (c *testTransportClient) Request(context.Context, *transport.HTTPRequest) ([]byte, int, error) {
+	return nil, 0, nil
+}
+
+func newTestClient(ctx context.Context, t *testing.T) (*Client, error) {
+	t.Helper()
+
 	cfg := &Config{
 		ClientID:     "some-client-id",
 		ClientSecret: "some-client-secret",
@@ -13,9 +27,20 @@ func TestNewClient(t *testing.T) {
 		skipAuth:     true,
 	}
 
-	ctx := context.Background()
-
 	c, err := NewClient(ctx, cfg, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	c.transport = testTransportClient{}
+
+	return c, err
+
+}
+
+func TestNewClient(t *testing.T) {
+	ctx := context.Background()
+	c, err := newTestClient(ctx, t)
 	if err != nil {
 		t.Fatalf("error setting up test: %v", err)
 	}
