@@ -1,5 +1,6 @@
 # sbanken-go
 ![tests](https://github.com/engvik/sbanken-go/workflows/master/badge.svg)
+[![GoDoc](https://godoc.org/github.com/engvik/sbanken-go?status.svg)](https://godoc.org/github.com/engvik/sbanken-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/engvik/sbanken-go)](https://goreportcard.com/report/github.com/engvik/sbanken-go)
 
 A Go client for the Sbanken API
