@@ -12,7 +12,7 @@ import (
 // TransferQuery represents the query for transferring between accounts.
 type TransferQuery struct {
 	FromAccountID string  `json:"fromAccountId"`
-	ToAccountID   string  `json:"toAccoundId"`
+	ToAccountID   string  `json:"toAccountId"`
 	Message       string  `json:"message"`
 	Amount        float32 `json:"amount"`
 }
