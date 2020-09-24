@@ -37,3 +37,7 @@ if err != nil {
 log.Println(accounts)
 
 ```
+
+## Documentation
+
+See [GoDoc](https://godoc.org/github.com/engvik/sbanken-go).
