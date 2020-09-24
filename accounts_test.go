@@ -35,17 +35,19 @@ func testListAccountsEndpointResponse() ([]byte, int, error) {
 	return b, http.StatusOK, nil
 }
 
-func testReadAccountEndpointResponse(shouldFail bool) ([]byte, int, error) {
+func testReadAccountEndpointResponse(behavior string) ([]byte, int, error) {
 	d := struct {
 		Account Account `json:"item"`
 		transport.HTTPResponse
 	}{
-		testAccount,
-		testHTTPResponseError,
+		Account: testAccount,
 	}
 
-	if !shouldFail {
-		d.IsError = false
+	if behavior == "fail" {
+		d.IsError = testHTTPResponseError.IsError
+		d.ErrorCode = testHTTPResponseError.ErrorCode
+		d.ErrorMessage = testHTTPResponseError.ErrorMessage
+		d.ErrorType = testHTTPResponseError.ErrorType
 	}
 
 	b, err := json.Marshal(d)
@@ -53,7 +55,7 @@ func testReadAccountEndpointResponse(shouldFail bool) ([]byte, int, error) {
 		return nil, 0, err
 	}
 
-	if shouldFail {
+	if behavior == "fail" {
 		return b, http.StatusInternalServerError, nil
 	}
 
@@ -107,6 +109,7 @@ func TestReadAccount(t *testing.T) {
 	tests := []struct {
 		name      string
 		accountID string
+		behavior  string
 		exp       Account
 		expErr    error
 	}{
@@ -116,7 +119,8 @@ func TestReadAccount(t *testing.T) {
 		},
 		{
 			name:      "should return error when error occurs",
-			accountID: "fail-account",
+			behavior:  "fail",
+			accountID: "test-account",
 			exp:       testAccount,
 			expErr:    getTestError("ReadAccount"),
 		},
@@ -130,6 +134,8 @@ func TestReadAccount(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
+			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
+
 			a, err := c.ReadAccount(ctx, tc.accountID)
 			if err != nil {
 				errStr := err.Error()

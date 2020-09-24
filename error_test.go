@@ -2,6 +2,16 @@ package sbanken
 
 import "testing"
 
+func getTestError(str string) *Error {
+	return &Error{
+		Code:        100,
+		StatusCode:  500,
+		ErrorString: str,
+		Message:     "an error occured",
+		Type:        "Error",
+	}
+}
+
 func TestError(t *testing.T) {
 	tests := []struct {
 		name string
