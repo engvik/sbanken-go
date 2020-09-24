@@ -17,9 +17,9 @@ See [this page](https://sbanken.no/bruke/utviklerportalen/) on how to get access
 ```go
 ctx := context.Background()
 cfg := sbanken.Config{
-    ClientID:     os.GetEnv("CLIENT_ID"),
-    ClientSecret: os.GetEnv("CLIENT_SECRET"),
-    CustomerID:   os.GetEnv("CUSTOMER_ID"),
+    ClientID:     os.Getenv("CLIENT_ID"),
+    ClientSecret: os.Getenv("CLIENT_SECRET"),
+    CustomerID:   os.Getenv("CUSTOMER_ID"),
 }
 
 c, err := sbanken.NewClient(ctx, &cfg, nil)
