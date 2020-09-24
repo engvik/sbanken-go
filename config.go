@@ -2,10 +2,13 @@ package sbanken
 
 // Config represents Sbanken client config.
 type Config struct {
-	ClientID     string
+	// ClientID is required.
+	ClientID string
+	// ClientSecret is required.
 	ClientSecret string
-	CustomerID   string
-	skipAuth     bool
+	// CustomerID is required.
+	CustomerID string
+	skipAuth   bool
 }
 
 func (c *Config) validate() error {
