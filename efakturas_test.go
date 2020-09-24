@@ -28,7 +28,7 @@ var testEfaktura = Efaktura{
 	CreditAccountNumber: 998877665544332211,
 }
 
-func testEfakturasResponses(behavior string) ([]byte, int, error) {
+func testListPayEfakturasResponses(behavior string) ([]byte, int, error) {
 	if behavior == "pay" {
 		pay := transport.HTTPResponse{
 			IsError: false,
@@ -47,6 +47,33 @@ func testEfakturasResponses(behavior string) ([]byte, int, error) {
 		transport.HTTPResponse
 	}{
 		Efakturas: []Efaktura{testEfaktura},
+	}
+
+	if behavior == "fail" {
+		d.IsError = testHTTPResponseError.IsError
+		d.ErrorCode = testHTTPResponseError.ErrorCode
+		d.ErrorMessage = testHTTPResponseError.ErrorMessage
+		d.ErrorType = testHTTPResponseError.ErrorType
+	}
+
+	b, err := json.Marshal(d)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	if behavior == "fail" {
+		return b, http.StatusInternalServerError, nil
+	}
+
+	return b, http.StatusOK, nil
+}
+
+func testReadEfakturaResponse(behavior string) ([]byte, int, error) {
+	d := struct {
+		Efaktura Efaktura `json:"item"`
+		transport.HTTPResponse
+	}{
+		Efaktura: testEfaktura,
 	}
 
 	if behavior == "fail" {
@@ -289,6 +316,61 @@ func TestListNewEfakturas(t *testing.T) {
 			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
 
 			a, err := c.ListNewEfakturas(ctx, tc.q)
+			if err != nil {
+				errStr := err.Error()
+				expErrStr := tc.expErr.Error()
+				if errStr != expErrStr {
+					t.Errorf("unexpected error: got %s, exp %s", errStr, expErrStr)
+				}
+
+				return
+			}
+
+			if !reflect.DeepEqual(a, tc.exp) {
+				t.Errorf("unexpected efaktura: got %v, exp %v", a, tc.exp)
+			}
+		})
+	}
+}
+
+func TestReadEfaktura(t *testing.T) {
+	ctx := context.Background()
+	c, err := newTestClient(ctx, t)
+	if err != nil {
+		t.Fatalf("error setting up test: %v", err)
+	}
+
+	tests := []struct {
+		name       string
+		efakturaID string
+		behavior   string
+		exp        Efaktura
+		expErr     error
+	}{
+		{
+			name:   "should fail when no efakturaID is passed",
+			expErr: ErrMissingEfakturaID,
+		},
+		{
+			name:       "should return error when error occurs",
+			efakturaID: "test-efaktura",
+			behavior:   "fail",
+			exp:        testEfaktura,
+			expErr:     getTestError("ReadEfaktura"),
+		},
+		{
+			name:       "should return efaktura",
+			efakturaID: "test-efaktura",
+			exp:        testEfaktura,
+			expErr:     nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
+
+			a, err := c.ReadEfaktura(ctx, tc.efakturaID)
 			if err != nil {
 				errStr := err.Error()
 				expErrStr := tc.expErr.Error()
