@@ -96,6 +96,10 @@ func (q *TransactionListQuery) QueryString(u string) (string, error) {
 
 // ListTransactions returns the latest transactions of the given account.
 func (c *Client) ListTransactions(ctx context.Context, accountID string, q *TransactionListQuery) ([]Transaction, error) {
+	if accountID == "" {
+		return nil, ErrMissingAccountID
+	}
+
 	url := fmt.Sprintf("%s/v1/Transactions/%s", c.baseURL, accountID)
 
 	if q != nil {

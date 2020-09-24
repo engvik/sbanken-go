@@ -47,7 +47,7 @@ func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 
 	if data.IsError || sc != http.StatusOK {
 		return &Error{
-			"ListTransactions",
+			"Transfer",
 			data.ErrorType,
 			data.ErrorMessage,
 			data.ErrorCode,
