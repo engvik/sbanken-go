@@ -23,7 +23,7 @@ func (c testTransportClient) Authorize(ctx context.Context) error {
 func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPRequest) ([]byte, int, error) {
 	switch r.URL {
 	case testListAccountsEndpoint:
-		return testListAccountsEndpointResponse()
+		return testListAccountsEndpointResponse(getTestBehavior(ctx))
 	case testReadAccountEndpoint:
 		return testReadAccountEndpointResponse(getTestBehavior(ctx))
 	}

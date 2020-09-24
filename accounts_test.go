@@ -20,16 +20,28 @@ var testAccount = Account{
 	CreditLimit: 0.0,
 }
 
-func testListAccountsEndpointResponse() ([]byte, int, error) {
+func testListAccountsEndpointResponse(behavior string) ([]byte, int, error) {
 	d := struct {
 		Accounts []Account `json:"items"`
+		transport.HTTPResponse
 	}{
-		[]Account{testAccount},
+		Accounts: []Account{testAccount},
+	}
+
+	if behavior == "fail" {
+		d.IsError = testHTTPResponseError.IsError
+		d.ErrorCode = testHTTPResponseError.ErrorCode
+		d.ErrorMessage = testHTTPResponseError.ErrorMessage
+		d.ErrorType = testHTTPResponseError.ErrorType
 	}
 
 	b, err := json.Marshal(d)
 	if err != nil {
 		return nil, 0, err
+	}
+
+	if behavior == "fail" {
+		return b, http.StatusInternalServerError, nil
 	}
 
 	return b, http.StatusOK, nil
@@ -70,10 +82,17 @@ func TestListAccounts(t *testing.T) {
 	}
 
 	tests := []struct {
-		name   string
-		exp    []Account
-		expErr error
+		name     string
+		behavior string
+		exp      []Account
+		expErr   error
 	}{
+		{
+			name:     "should return error when error occurs",
+			behavior: "fail",
+			exp:      nil,
+			expErr:   getTestError("ListAccounts"),
+		},
 		{
 			name:   "should list accounts",
 			exp:    []Account{testAccount},
@@ -83,10 +102,14 @@ func TestListAccounts(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
+			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
+
 			a, err := c.ListAccounts(ctx)
 			if err != nil {
-				if err != tc.expErr {
-					t.Errorf("unexpected error: got %s, exp %s", err, tc.expErr)
+				errStr := err.Error()
+				expErrStr := tc.expErr.Error()
+				if errStr != expErrStr {
+					t.Errorf("unexpected error: got %s, exp %s", errStr, expErrStr)
 				}
 
 				return
