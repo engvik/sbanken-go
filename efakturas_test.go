@@ -28,7 +28,7 @@ var testEfaktura = Efaktura{
 	CreditAccountNumber: 998877665544332211,
 }
 
-func testEfakturasEndpointsResponse(behavior string) ([]byte, int, error) {
+func testEfakturasResponses(behavior string) ([]byte, int, error) {
 	if behavior == "pay" {
 		pay := transport.HTTPResponse{
 			IsError: false,
@@ -109,7 +109,7 @@ func TestQueryString(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			u, err := tc.q.QueryString("http://example.com")
+			u, err := tc.q.QueryString("https://example.com")
 			if err != nil {
 				t.Errorf("unexpected error: got %s", err)
 
@@ -226,6 +226,81 @@ func TestPayEfaktura(t *testing.T) {
 				}
 
 				return
+			}
+		})
+	}
+}
+
+func TestListNewEfakturas(t *testing.T) {
+	ctx := context.Background()
+	c, err := newTestClient(ctx, t)
+	if err != nil {
+		t.Fatalf("error setting up test: %v", err)
+	}
+
+	tests := []struct {
+		name     string
+		q        *EfakturaListQuery
+		behavior string
+		exp      []Efaktura
+		expErr   error
+	}{
+		{
+			name:     "should return error when error occurs",
+			q:        nil,
+			behavior: "fail",
+			exp:      nil,
+			expErr:   getTestError("ListNewEfakturas"),
+		},
+		{
+			name:   "should fail with invalid query StartDate",
+			q:      &EfakturaListQuery{StartDate: time.Now()},
+			exp:    []Efaktura{testEfaktura},
+			expErr: ErrNotValidOptionStartDate,
+		},
+		{
+			name:   "should fail with invalid query EndDate",
+			q:      &EfakturaListQuery{EndDate: time.Now()},
+			exp:    []Efaktura{testEfaktura},
+			expErr: ErrNotValidOptionEndDate,
+		},
+		{
+			name:   "should fail with invalid query Status",
+			q:      &EfakturaListQuery{Status: "NEW"},
+			exp:    []Efaktura{testEfaktura},
+			expErr: ErrNotValidOptionStatus,
+		},
+		{
+			name:   "should list efakturas without query",
+			q:      nil,
+			exp:    []Efaktura{testEfaktura},
+			expErr: nil,
+		},
+		{
+			name:   "should list efaktura with valid query",
+			q:      &EfakturaListQuery{Index: "1"},
+			exp:    []Efaktura{testEfaktura},
+			expErr: nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
+
+			a, err := c.ListNewEfakturas(ctx, tc.q)
+			if err != nil {
+				errStr := err.Error()
+				expErrStr := tc.expErr.Error()
+				if errStr != expErrStr {
+					t.Errorf("unexpected error: got %s, exp %s", errStr, expErrStr)
+				}
+
+				return
+			}
+
+			if !reflect.DeepEqual(a, tc.exp) {
+				t.Errorf("unexpected efaktura: got %v, exp %v", a, tc.exp)
 			}
 		})
 	}

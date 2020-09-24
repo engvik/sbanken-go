@@ -8,12 +8,14 @@ import (
 )
 
 var (
-	testListAccountsEndpoint       = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
-	testReadAccountEndpoint        = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
-	testListCardsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Cards"
-	testListEfakturasEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
-	testListEfakturasQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Efakturas?index=1"
-	testPayEfakturaEndpoint        = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
+	testListAccountsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
+	testReadAccountEndpoint           = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
+	testListCardsEndpoint             = "https://api.sbanken.no/exec.bank/api/v1/Cards"
+	testListEfakturasEndpoint         = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
+	testListEfakturasQueryEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/Efakturas?index=1"
+	testPayEfakturaEndpoint           = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
+	testListNewEfakturasEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new"
+	testListNewEfakturasQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new?index=1"
 )
 
 type testBehavior string
@@ -37,7 +39,11 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListEfakturasQueryEndpoint:
 		fallthrough
 	case testPayEfakturaEndpoint:
-		return testEfakturasEndpointsResponse(getTestBehavior(ctx))
+		fallthrough
+	case testListNewEfakturasEndpoint:
+		fallthrough
+	case testListNewEfakturasQueryEndpoint:
+		return testEfakturasResponses(getTestBehavior(ctx))
 	default:
 		return nil, 0, nil
 	}
