@@ -28,7 +28,20 @@ var testEfaktura = Efaktura{
 	CreditAccountNumber: 998877665544332211,
 }
 
-func testListEfakturasEndpointResponse(behavior string) ([]byte, int, error) {
+func testEfakturasEndpointsResponse(behavior string) ([]byte, int, error) {
+	if behavior == "pay" {
+		pay := transport.HTTPResponse{
+			IsError: false,
+		}
+
+		b, err := json.Marshal(pay)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		return b, http.StatusOK, nil
+	}
+
 	d := struct {
 		Efakturas []Efaktura `json:"items"`
 		transport.HTTPResponse
@@ -110,37 +123,6 @@ func TestQueryString(t *testing.T) {
 	}
 }
 
-/*
-}
-
-func testReadAccountEndpointResponse(behavior string) ([]byte, int, error) {
-	d := struct {
-		Account Account `json:"item"`
-		transport.HTTPResponse
-	}{
-		Account: testAccount,
-	}
-
-	if behavior == "fail" {
-		d.IsError = testHTTPResponseError.IsError
-		d.ErrorCode = testHTTPResponseError.ErrorCode
-		d.ErrorMessage = testHTTPResponseError.ErrorMessage
-		d.ErrorType = testHTTPResponseError.ErrorType
-	}
-
-	b, err := json.Marshal(d)
-	if err != nil {
-		return nil, 0, err
-	}
-
-	if behavior == "fail" {
-		return b, http.StatusInternalServerError, nil
-	}
-
-	return b, http.StatusOK, nil
-}
-*/
-
 func TestListEfakturas(t *testing.T) {
 	ctx := context.Background()
 	c, err := newTestClient(ctx, t)
@@ -193,6 +175,57 @@ func TestListEfakturas(t *testing.T) {
 
 			if !reflect.DeepEqual(a, tc.exp) {
 				t.Errorf("unexpected efaktura: got %v, exp %v", a, tc.exp)
+			}
+		})
+	}
+}
+
+func TestPayEfaktura(t *testing.T) {
+	ctx := context.Background()
+	c, err := newTestClient(ctx, t)
+	if err != nil {
+		t.Fatalf("error setting up test: %v", err)
+	}
+
+	tests := []struct {
+		name     string
+		q        *EfakturaPayQuery
+		behavior string
+		exp      error
+	}{
+		{
+			name:     "should fail if no efaktura pay query",
+			q:        nil,
+			behavior: "pay",
+			exp:      ErrMissingEfakturaPayQuery,
+		},
+		{
+			name:     "should return error when error occurs",
+			q:        &EfakturaPayQuery{ID: "efaktura-id", AccountID: "account-id"},
+			behavior: "fail",
+			exp:      getTestError("PayEfaktura"),
+		},
+		{
+			name:     "should pay efaktura",
+			q:        &EfakturaPayQuery{ID: "efaktura-id", AccountID: "account-id"},
+			behavior: "pay",
+			exp:      nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
+
+			err := c.PayEfaktura(ctx, tc.q)
+			if err != nil {
+				errStr := err.Error()
+				expStr := tc.exp.Error()
+				if errStr != expStr {
+					t.Errorf("unexpected error: got %s, exp %s", errStr, expStr)
+				}
+
+				return
 			}
 		})
 	}
