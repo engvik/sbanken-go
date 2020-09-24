@@ -95,7 +95,7 @@ func testReadEfakturaResponse(behavior string) ([]byte, int, error) {
 	return b, http.StatusOK, nil
 }
 
-func TestQueryString(t *testing.T) {
+func TestEfakturaQueryString(t *testing.T) {
 	timestamp := time.Now()
 	qsTimestamp := url.QueryEscape(timestamp.String())
 
