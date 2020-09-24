@@ -17,6 +17,9 @@ var (
 	testListNewEfakturasEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new"
 	testListNewEfakturasQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new?index=1"
 	testReadEfakturaEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/test-efaktura"
+	testListPaymentsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account"
+	testListPaymentsQueryEndpoint     = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account?index=1"
+	testReadPaymentsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account/test-payment"
 )
 
 type testBehavior string
@@ -47,6 +50,12 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 		return testListPayEfakturasResponses(getTestBehavior(ctx))
 	case testReadEfakturaEndpoint:
 		return testReadEfakturaResponse(getTestBehavior(ctx))
+	case testListPaymentsEndpoint:
+		fallthrough
+	case testListPaymentsQueryEndpoint:
+		return testListPaymentResponses(getTestBehavior(ctx))
+	case testReadPaymentsEndpoint:
+		return testReadPaymentResponse(getTestBehavior(ctx))
 	default:
 		return nil, 0, nil
 	}
