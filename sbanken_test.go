@@ -10,6 +10,7 @@ import (
 var (
 	testListAccountsEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
 	testReadAccountEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
+	testListCardsEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/Cards"
 )
 
 type testBehavior string
@@ -26,9 +27,11 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 		return testListAccountsEndpointResponse(getTestBehavior(ctx))
 	case testReadAccountEndpoint:
 		return testReadAccountEndpointResponse(getTestBehavior(ctx))
+	case testListCardsEndpoint:
+		return testListCardsEndpointResponse(getTestBehavior(ctx))
+	default:
+		return nil, 0, nil
 	}
-
-	return nil, 0, nil
 }
 
 func getTestBehavior(ctx context.Context) string {
