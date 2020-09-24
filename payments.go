@@ -29,7 +29,7 @@ type Payment struct {
 	IsActive               bool     `json:"isActive"`
 }
 
-// PaymentListQuery represents query parameteres for querying payments.
+// PaymentListQuery represents query parameters for querying payments.
 type PaymentListQuery struct {
 	Index  string
 	Length string

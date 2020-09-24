@@ -85,7 +85,7 @@ func getTestBehavior(ctx context.Context) string {
 var testHTTPResponseError = transport.HTTPResponse{
 	IsError:      true,
 	ErrorCode:    100,
-	ErrorMessage: "an error occured",
+	ErrorMessage: "an error occurred",
 	ErrorType:    "Error",
 }
 

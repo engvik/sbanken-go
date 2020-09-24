@@ -9,7 +9,7 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
-// TransferQuery represents the query for transfering between accounts.
+// TransferQuery represents the query for transferring between accounts.
 type TransferQuery struct {
 	FromAccountID string  `json:"fromAccountId"`
 	ToAccountID   string  `json:"toAccoundId"`

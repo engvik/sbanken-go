@@ -9,12 +9,14 @@ import (
 	"net/http"
 )
 
+// HTTPRequest represents a http request.
 type HTTPRequest struct {
 	Method      string
 	URL         string
 	PostPayload []byte
 }
 
+// HTTPResponse represents a http response.
 type HTTPResponse struct {
 	TraceID        string `json:"traceId"`
 	ErrorType      string `json:"errorType"`
@@ -24,6 +26,7 @@ type HTTPResponse struct {
 	IsError        bool   `json:"isError"`
 }
 
+// Request performs the HTTP request.
 func (c *Client) Request(ctx context.Context, r *HTTPRequest) ([]byte, int, error) {
 	token, err := c.getToken(ctx)
 	if err != nil {

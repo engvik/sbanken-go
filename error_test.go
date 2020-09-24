@@ -7,7 +7,7 @@ func getTestError(str string) *Error {
 		Code:        100,
 		StatusCode:  500,
 		ErrorString: str,
-		Message:     "an error occured",
+		Message:     "an error occurred",
 		Type:        "Error",
 	}
 }
@@ -24,9 +24,9 @@ func TestError(t *testing.T) {
 				ErrorString: "TestError",
 				Type:        "Test",
 				StatusCode:  500,
-				Message:     "an error occured",
+				Message:     "an error occurred",
 			},
-			"TestError error: Test (StatusCode: 500 / ErrorCode: 0): an error occured",
+			"TestError error: Test (StatusCode: 500 / ErrorCode: 0): an error occurred",
 		},
 	}
 

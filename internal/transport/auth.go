@@ -19,6 +19,7 @@ type auth struct {
 	expires     time.Time
 }
 
+// Authorize fetches a token for accessing the APIs.
 func (c *Client) Authorize(ctx context.Context) error {
 	authURL := "https://auth.sbanken.no/identityserver/connect/token"
 	payload := []byte("grant_type=client_credentials")

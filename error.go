@@ -20,7 +20,7 @@ var (
 	ErrMissingPostPayload = errors.New("PostPayload must be set")
 	// ErrMissingClientID are returned when ClientID is not set.
 	ErrMissingClientID = errors.New("ClientID must be set")
-	// ErrMissingClientSecretare returned when ClientSecret is not set.
+	// ErrMissingClientSecret are returned when ClientSecret is not set.
 	ErrMissingClientSecret = errors.New("ClientSecret must be set")
 	// ErrMissingCustomerID are returned when CustomerID is not set.
 	ErrMissingCustomerID = errors.New("CustomerID must be set")
