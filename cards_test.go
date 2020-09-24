@@ -91,7 +91,7 @@ func TestListCards(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(a, tc.exp) {
-				t.Errorf("unexpected accounts: got %v, exp %v", a, tc.exp)
+				t.Errorf("unexpected cards: got %v, exp %v", a, tc.exp)
 			}
 		})
 	}
