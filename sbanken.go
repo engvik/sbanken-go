@@ -1,6 +1,6 @@
-// Package sbanken 	provides an easy way to work with the Sbanken Open Banking API.
+// Package sbanken provides an easy way to work with the Sbanken API.
 //
-// Sbanken API information: https://sbanken.no/bruke/open-banking/
+// Sbanken API information: https://sbanken.no/bruke/utviklerportalen/
 // Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html
 package sbanken
 
