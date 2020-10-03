@@ -1,5 +1,6 @@
 # sbanken-go
 ![tests](https://github.com/engvik/sbanken-go/workflows/master/badge.svg)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/engvik/sbanken-go)](https://pkg.go.dev/github.com/engvik/sbanken-go)
 [![GoDoc](https://godoc.org/github.com/engvik/sbanken-go?status.svg)](https://godoc.org/github.com/engvik/sbanken-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/engvik/sbanken-go)](https://goreportcard.com/report/github.com/engvik/sbanken-go)
 
