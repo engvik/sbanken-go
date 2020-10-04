@@ -18,8 +18,8 @@ type Card struct {
 	Status        string `json:"status"`
 	Type          string `json:"cardType"`
 	ProductCode   string `json:"productCode"`
+	AccountNumber string `json:"accountNumber"`
 	VersionNumber int    `json:"cardVersionNumber"`
-	AccountNumber int    `json:"accountNumber"`
 }
 
 // ListCards lists the cards.

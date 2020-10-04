@@ -43,6 +43,7 @@ func (c *Client) Request(ctx context.Context, r *HTTPRequest) ([]byte, int, erro
 			return nil, 0, errors.New("Post payload missing from POST")
 		}
 		req, err = http.NewRequest(r.Method, r.URL, bytes.NewBuffer(r.PostPayload))
+		req.Header.Set("Content-Type", "application/json")
 	default:
 		return nil, 0, fmt.Errorf("Invalid HTTP request method: %s", r.Method)
 	}
