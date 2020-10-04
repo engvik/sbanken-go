@@ -18,8 +18,8 @@ var testCard = Card{
 	Status:        "status",
 	Type:          "type",
 	ProductCode:   "code",
+	AccountNumber: "987654321",
 	VersionNumber: 5,
-	AccountNumber: 987654321,
 }
 
 func testListCardsEndpointResponse(behavior string) ([]byte, int, error) {
