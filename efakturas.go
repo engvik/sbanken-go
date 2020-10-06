@@ -24,10 +24,10 @@ type Efaktura struct {
 	UpdatedDueDate      string  `json:"updatedDueDate"`
 	NotificationDate    string  `json:"notificationDate"`
 	IssuerName          string  `json:"issuerName"`
+	CreditAccountNumber string  `json:"creditAccountNumber"`
 	OriginalAmount      float32 `json:"originalAmount"`
 	UpdatedAmount       float32 `json:"updatedAmount"`
 	MinimumAmount       float32 `json:"minimumAmount"`
-	CreditAccountNumber int     `json:"creditAccountNumber"`
 }
 
 // EfakturaListQuery represents query parameters for querying efakturas.
