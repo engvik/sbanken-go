@@ -25,7 +25,7 @@ var testEfaktura = Efaktura{
 	IssuerName:          "Hello",
 	OriginalAmount:      133.33,
 	MinimumAmount:       100.00,
-	CreditAccountNumber: 998877665544332211,
+	CreditAccountNumber: "998877665544332211",
 }
 
 func testListPayEfakturasResponses(behavior string) ([]byte, int, error) {
