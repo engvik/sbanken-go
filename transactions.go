@@ -76,11 +76,11 @@ func (q *TransactionListQuery) QueryString(u string) (string, error) {
 	query := parsedURL.Query()
 
 	if !q.StartDate.IsZero() {
-		query.Add("startDate", q.StartDate.String())
+		query.Add("startDate", q.StartDate.Format(time.RFC3339))
 	}
 
 	if !q.EndDate.IsZero() {
-		query.Add("endDate", q.EndDate.String())
+		query.Add("endDate", q.EndDate.Format(time.RFC3339))
 	}
 
 	if q.Index != "" {
