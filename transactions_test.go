@@ -67,7 +67,7 @@ func testListTransactionsResponse(behavior string) ([]byte, int, error) {
 
 func TestTransactionQueryString(t *testing.T) {
 	timestamp := time.Now()
-	qsTimestamp := url.QueryEscape(timestamp.String())
+	qsTimestamp := url.QueryEscape(timestamp.Format(time.RFC3339))
 
 	tests := []struct {
 		name string

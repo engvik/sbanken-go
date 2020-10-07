@@ -97,7 +97,7 @@ func testReadEfakturaResponse(behavior string) ([]byte, int, error) {
 
 func TestEfakturaQueryString(t *testing.T) {
 	timestamp := time.Now()
-	qsTimestamp := url.QueryEscape(timestamp.String())
+	qsTimestamp := url.QueryEscape(timestamp.Format(time.RFC3339))
 
 	tests := []struct {
 		name string
