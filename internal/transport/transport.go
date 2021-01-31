@@ -10,6 +10,7 @@ type Client struct {
 	clientID     string
 	clientSecret string
 	customerID   string
+	userAgent    string
 	http         *http.Client
 	auth         *auth
 }
@@ -19,6 +20,7 @@ type Config struct {
 	ClientID     string
 	ClientSecret string
 	CustomerID   string
+	UserAgent    string
 }
 
 // New returns a transport client.
@@ -27,6 +29,7 @@ func New(ctx context.Context, cfg *Config, httpClient *http.Client) *Client {
 		clientID:     cfg.ClientID,
 		clientSecret: cfg.ClientSecret,
 		customerID:   cfg.CustomerID,
+		userAgent:    cfg.UserAgent,
 	}
 
 	c.setHTTPClient(httpClient)

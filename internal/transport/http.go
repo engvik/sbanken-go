@@ -57,6 +57,7 @@ func (c *Client) Request(ctx context.Context, r *HTTPRequest) ([]byte, int, erro
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("customerId", c.customerID)
+	req.Header.Set("User-Agent", c.userAgent)
 
 	res, err := c.http.Do(req)
 	if err != nil {

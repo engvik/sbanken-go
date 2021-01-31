@@ -12,6 +12,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+const VERSION = "1.0.2"
+
 type transportClient interface {
 	Authorize(context.Context) error
 	Request(context.Context, *transport.HTTPRequest) ([]byte, int, error)
@@ -30,10 +32,16 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 		return nil, fmt.Errorf("validate: %w", err)
 	}
 
+	userAgent := cfg.UserAgent
+	if userAgent == "" {
+		userAgent = fmt.Sprintf("sbanken-go/%s (github.com/engvik/sbanken-go)", VERSION)
+	}
+
 	tCfg := &transport.Config{
 		ClientID:     cfg.ClientID,
 		ClientSecret: cfg.ClientSecret,
 		CustomerID:   cfg.CustomerID,
+		UserAgent:    userAgent,
 	}
 
 	c := &Client{
