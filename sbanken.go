@@ -23,6 +23,7 @@ type transportClient interface {
 type Client struct {
 	bankBaseURL      string
 	customersBaseURL string
+	customerID       string
 	transport        transportClient
 }
 
@@ -47,6 +48,7 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 	c := &Client{
 		bankBaseURL:      "https://api.sbanken.no/exec.bank/api",
 		customersBaseURL: "https://api.sbanken.no/exec.customers/api",
+		customerID:       cfg.CustomerID,
 		transport:        transport.New(ctx, tCfg, httpClient),
 	}
 
