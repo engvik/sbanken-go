@@ -117,10 +117,17 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	t.Run("should have baseURL set", func(t *testing.T) {
+	t.Run("should have bankBaseURL set", func(t *testing.T) {
 		exp := "https://api.sbanken.no/exec.bank/api"
 		if c.bankBaseURL != exp {
 			t.Errorf("unexpected baseURL: got %s, exp %s", c.bankBaseURL, exp)
+		}
+	})
+
+	t.Run("should have customersBaseURL set", func(t *testing.T) {
+		exp := "https://api.sbanken.no/exec.customers/api"
+		if c.customersBaseURL != exp {
+			t.Errorf("unexpected baseURL: got %s, exp %s", c.customersBaseURL, exp)
 		}
 	})
 
