@@ -7,12 +7,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 // HTTPRequest represents a http request.
 type HTTPRequest struct {
 	Method      string
 	URL         string
+	QueryParams map[string]string
 	PostPayload []byte
 }
 
@@ -50,6 +52,16 @@ func (c *Client) Request(ctx context.Context, r *HTTPRequest) ([]byte, int, erro
 
 	if err != nil {
 		return nil, 0, err
+	}
+
+	if len(r.QueryParams) > 0 {
+		q := url.Values{}
+
+		for k, v := range r.QueryParams {
+			q.Add(k, v)
+		}
+
+		req.URL.RawQuery = q.Encode()
 	}
 
 	req = req.WithContext(ctx)
