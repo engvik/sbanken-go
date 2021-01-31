@@ -12,6 +12,8 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
+const VERSION = "1.0.2"
+
 type transportClient interface {
 	Authorize(context.Context) error
 	Request(context.Context, *transport.HTTPRequest) ([]byte, int, error)
@@ -19,8 +21,9 @@ type transportClient interface {
 
 // Client represents an Sbanken client.
 type Client struct {
-	baseURL   string
-	transport transportClient
+	bankBaseURL      string
+	customersBaseURL string
+	transport        transportClient
 }
 
 // NewClient returns a new Sbanken client. If httpClient is nil, http.DefaultClient will be used.
@@ -29,15 +32,22 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 		return nil, fmt.Errorf("validate: %w", err)
 	}
 
+	userAgent := cfg.UserAgent
+	if userAgent == "" {
+		userAgent = fmt.Sprintf("sbanken-go/%s (github.com/engvik/sbanken-go)", VERSION)
+	}
+
 	tCfg := &transport.Config{
 		ClientID:     cfg.ClientID,
 		ClientSecret: cfg.ClientSecret,
 		CustomerID:   cfg.CustomerID,
+		UserAgent:    userAgent,
 	}
 
 	c := &Client{
-		baseURL:   "https://api.sbanken.no/exec.bank/api",
-		transport: transport.New(ctx, tCfg, httpClient),
+		bankBaseURL:      "https://api.sbanken.no/exec.bank/api",
+		customersBaseURL: "https://api.sbanken.no/exec.customers/api",
+		transport:        transport.New(ctx, tCfg, httpClient),
 	}
 
 	if !cfg.skipAuth {

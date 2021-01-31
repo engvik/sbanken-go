@@ -9,7 +9,7 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
-func testTransferResponse(behavior string) ([]byte, int, error) {
+func testTransferEndpointResponse(behavior string) ([]byte, int, error) {
 	d := transport.HTTPResponse{
 		IsError: false,
 	}

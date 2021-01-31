@@ -29,7 +29,7 @@ func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 		return fmt.Errorf("Marshal: %w", err)
 	}
 
-	url := fmt.Sprintf("%s/v1/Transfers", c.baseURL)
+	url := fmt.Sprintf("%s/v1/Transfers", c.bankBaseURL)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method:      http.MethodPost,

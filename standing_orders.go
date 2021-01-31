@@ -33,7 +33,7 @@ func (c *Client) ListStandingOrders(ctx context.Context, accountID string) ([]St
 		return nil, ErrMissingAccountID
 	}
 
-	url := fmt.Sprintf("%s/v1/StandingOrders/%s", c.baseURL, accountID)
+	url := fmt.Sprintf("%s/v1/StandingOrders/%s", c.bankBaseURL, accountID)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,

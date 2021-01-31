@@ -80,7 +80,7 @@ type EfakturaPayQuery struct {
 
 // ListEfakturas lists efakturas.
 func (c *Client) ListEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
-	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
+	url := fmt.Sprintf("%s/v1/Efakturas", c.bankBaseURL)
 
 	return c.listEfakturas(ctx, url, q, "ListEfakturas")
 }
@@ -96,7 +96,7 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 		return fmt.Errorf("Marshal: %w", err)
 	}
 
-	url := fmt.Sprintf("%s/v1/Efakturas", c.baseURL)
+	url := fmt.Sprintf("%s/v1/Efakturas", c.bankBaseURL)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method:      http.MethodPost,
@@ -127,7 +127,7 @@ func (c *Client) PayEfaktura(ctx context.Context, q *EfakturaPayQuery) error {
 
 // ListNewEfakturas lists efakturas that have not yet been processed by the customer.
 func (c *Client) ListNewEfakturas(ctx context.Context, q *EfakturaListQuery) ([]Efaktura, error) {
-	url := fmt.Sprintf("%s/v1/Efakturas/new", c.baseURL)
+	url := fmt.Sprintf("%s/v1/Efakturas/new", c.bankBaseURL)
 
 	if q != nil {
 		if !q.StartDate.IsZero() {
@@ -152,7 +152,7 @@ func (c *Client) ReadEfaktura(ctx context.Context, efakturaID string) (Efaktura,
 		return Efaktura{}, ErrMissingEfakturaID
 	}
 
-	url := fmt.Sprintf("%s/v1/Efakturas/%s", c.baseURL, efakturaID)
+	url := fmt.Sprintf("%s/v1/Efakturas/%s", c.bankBaseURL, efakturaID)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,

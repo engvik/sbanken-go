@@ -61,7 +61,7 @@ func (c *Client) ListPayments(ctx context.Context, accountID string, q *PaymentL
 		return nil, ErrMissingAccountID
 	}
 
-	url := fmt.Sprintf("%s/v1/Payments/%s", c.baseURL, accountID)
+	url := fmt.Sprintf("%s/v1/Payments/%s", c.bankBaseURL, accountID)
 
 	if q != nil {
 		qs, err := q.QueryString(url)
@@ -112,7 +112,7 @@ func (c *Client) ReadPayment(ctx context.Context, accountID string, paymentID st
 		return Payment{}, ErrMissingPaymentID
 	}
 
-	url := fmt.Sprintf("%s/v1/Payments/%s/%s", c.baseURL, accountID, paymentID)
+	url := fmt.Sprintf("%s/v1/Payments/%s/%s", c.bankBaseURL, accountID, paymentID)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,

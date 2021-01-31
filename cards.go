@@ -24,7 +24,7 @@ type Card struct {
 
 // ListCards lists the cards.
 func (c *Client) ListCards(ctx context.Context) ([]Card, error) {
-	url := fmt.Sprintf("%s/v1/Cards", c.baseURL)
+	url := fmt.Sprintf("%s/v1/Cards", c.bankBaseURL)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,

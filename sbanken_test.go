@@ -24,7 +24,8 @@ var (
 	testListTransactionsEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account"
 	testListTransactionsQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account?index=1"
 
-	testTransferEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
+	testTransferEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
+	testCustomersEndpoint = "https://api.sbanken.no/exec.customers/api/v1/Customers"
 )
 
 type testBehavior string
@@ -52,23 +53,25 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListNewEfakturasEndpoint:
 		fallthrough
 	case testListNewEfakturasQueryEndpoint:
-		return testListPayEfakturasResponses(getTestBehavior(ctx))
+		return testListPayEfakturasEndpointResponses(getTestBehavior(ctx))
 	case testReadEfakturaEndpoint:
-		return testReadEfakturaResponse(getTestBehavior(ctx))
+		return testReadEfakturaEndpointResponse(getTestBehavior(ctx))
 	case testListPaymentsEndpoint:
 		fallthrough
 	case testListPaymentsQueryEndpoint:
-		return testListPaymentResponses(getTestBehavior(ctx))
+		return testListPaymentEndpointResponses(getTestBehavior(ctx))
 	case testReadPaymentsEndpoint:
-		return testReadPaymentResponse(getTestBehavior(ctx))
+		return testReadPaymentEndpointResponse(getTestBehavior(ctx))
 	case testListStandingOrdersEndpoint:
-		return testListStandingOrdersResponse(getTestBehavior(ctx))
+		return testListStandingOrdersEndpointResponse(getTestBehavior(ctx))
 	case testListTransactionsEndpoint:
 		fallthrough
 	case testListTransactionsQueryEndpoint:
-		return testListTransactionsResponse(getTestBehavior(ctx))
+		return testListTransactionsEndpointResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
-		return testTransferResponse(getTestBehavior(ctx))
+		return testTransferEndpointResponse(getTestBehavior(ctx))
+	case testCustomersEndpoint:
+		return testCustomersEndpointResponse(getTestBehavior(ctx))
 	default:
 		return nil, 0, nil
 	}
@@ -117,10 +120,17 @@ func TestNewClient(t *testing.T) {
 		t.Fatalf("error setting up test: %v", err)
 	}
 
-	t.Run("should have baseURL set", func(t *testing.T) {
+	t.Run("should have bankBaseURL set", func(t *testing.T) {
 		exp := "https://api.sbanken.no/exec.bank/api"
-		if c.baseURL != exp {
-			t.Errorf("unexpected baseURL: got %s, exp %s", c.baseURL, exp)
+		if c.bankBaseURL != exp {
+			t.Errorf("unexpected baseURL: got %s, exp %s", c.bankBaseURL, exp)
+		}
+	})
+
+	t.Run("should have customersBaseURL set", func(t *testing.T) {
+		exp := "https://api.sbanken.no/exec.customers/api"
+		if c.customersBaseURL != exp {
+			t.Errorf("unexpected baseURL: got %s, exp %s", c.customersBaseURL, exp)
 		}
 	})
 

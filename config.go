@@ -8,7 +8,9 @@ type Config struct {
 	ClientSecret string
 	// CustomerID is required.
 	CustomerID string
-	skipAuth   bool
+	// UserAgent is for optionally setting a custom user agent.
+	UserAgent string
+	skipAuth  bool
 }
 
 func (c *Config) validate() error {
