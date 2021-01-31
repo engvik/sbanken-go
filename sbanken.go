@@ -19,8 +19,8 @@ type transportClient interface {
 
 // Client represents an Sbanken client.
 type Client struct {
-	baseURL   string
-	transport transportClient
+	bankBaseURL string
+	transport   transportClient
 }
 
 // NewClient returns a new Sbanken client. If httpClient is nil, http.DefaultClient will be used.
@@ -36,8 +36,8 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 	}
 
 	c := &Client{
-		baseURL:   "https://api.sbanken.no/exec.bank/api",
-		transport: transport.New(ctx, tCfg, httpClient),
+		bankBaseURL: "https://api.sbanken.no/exec.bank/api",
+		transport:   transport.New(ctx, tCfg, httpClient),
 	}
 
 	if !cfg.skipAuth {

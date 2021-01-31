@@ -23,7 +23,7 @@ type Account struct {
 
 // ListAccounts lists the accounts.
 func (c *Client) ListAccounts(ctx context.Context) ([]Account, error) {
-	url := fmt.Sprintf("%s/v1/Accounts", c.baseURL)
+	url := fmt.Sprintf("%s/v1/Accounts", c.bankBaseURL)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,
@@ -61,7 +61,7 @@ func (c *Client) ReadAccount(ctx context.Context, accountID string) (Account, er
 		return Account{}, ErrMissingAccountID
 	}
 
-	url := fmt.Sprintf("%s/v1/Accounts/%s", c.baseURL, accountID)
+	url := fmt.Sprintf("%s/v1/Accounts/%s", c.bankBaseURL, accountID)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,

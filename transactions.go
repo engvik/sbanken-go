@@ -100,7 +100,7 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 		return nil, ErrMissingAccountID
 	}
 
-	url := fmt.Sprintf("%s/v1/Transactions/%s", c.baseURL, accountID)
+	url := fmt.Sprintf("%s/v1/Transactions/%s", c.bankBaseURL, accountID)
 
 	if q != nil {
 		qs, err := q.QueryString(url)
