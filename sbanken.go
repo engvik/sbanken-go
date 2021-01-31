@@ -12,7 +12,7 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
-const VERSION = "1.0.2"
+const VERSION = "1.1.0"
 
 type transportClient interface {
 	Authorize(context.Context) error
