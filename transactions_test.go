@@ -38,7 +38,7 @@ var testTransaction = Transaction{
 	TransactionDetailSpecified:  true,
 }
 
-func testListTransactionsResponse(behavior string) ([]byte, int, error) {
+func testListTransactionsEndpointResponse(behavior string) ([]byte, int, error) {
 	d := struct {
 		Transactions []Transaction `json:"items"`
 		transport.HTTPResponse

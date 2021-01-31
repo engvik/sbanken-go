@@ -28,7 +28,7 @@ var testPayment = Payment{
 	IsActive:               true,
 }
 
-func testListPaymentResponses(behavior string) ([]byte, int, error) {
+func testListPaymentEndpointResponses(behavior string) ([]byte, int, error) {
 	d := struct {
 		Payments []Payment `json:"items"`
 		transport.HTTPResponse
@@ -55,7 +55,7 @@ func testListPaymentResponses(behavior string) ([]byte, int, error) {
 	return b, http.StatusOK, nil
 }
 
-func testReadPaymentResponse(behavior string) ([]byte, int, error) {
+func testReadPaymentEndpointResponse(behavior string) ([]byte, int, error) {
 	d := struct {
 		Payment Payment `json:"item"`
 		transport.HTTPResponse

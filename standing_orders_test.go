@@ -26,7 +26,7 @@ var testStandingOrder = StandingOrder{
 	StandingOrderID:        19,
 }
 
-func testListStandingOrdersResponse(behavior string) ([]byte, int, error) {
+func testListStandingOrdersEndpointResponse(behavior string) ([]byte, int, error) {
 	d := struct {
 		StandingOrders []StandingOrder `json:"items"`
 		transport.HTTPResponse

@@ -28,7 +28,7 @@ var testEfaktura = Efaktura{
 	CreditAccountNumber: "998877665544332211",
 }
 
-func testListPayEfakturasResponses(behavior string) ([]byte, int, error) {
+func testListPayEfakturasEndpointResponses(behavior string) ([]byte, int, error) {
 	if behavior == "pay" {
 		pay := transport.HTTPResponse{
 			IsError: false,
@@ -68,7 +68,7 @@ func testListPayEfakturasResponses(behavior string) ([]byte, int, error) {
 	return b, http.StatusOK, nil
 }
 
-func testReadEfakturaResponse(behavior string) ([]byte, int, error) {
+func testReadEfakturaEndpointResponse(behavior string) ([]byte, int, error) {
 	d := struct {
 		Efaktura Efaktura `json:"item"`
 		transport.HTTPResponse

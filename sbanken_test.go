@@ -53,23 +53,23 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListNewEfakturasEndpoint:
 		fallthrough
 	case testListNewEfakturasQueryEndpoint:
-		return testListPayEfakturasResponses(getTestBehavior(ctx))
+		return testListPayEfakturasEndpointResponses(getTestBehavior(ctx))
 	case testReadEfakturaEndpoint:
-		return testReadEfakturaResponse(getTestBehavior(ctx))
+		return testReadEfakturaEndpointResponse(getTestBehavior(ctx))
 	case testListPaymentsEndpoint:
 		fallthrough
 	case testListPaymentsQueryEndpoint:
-		return testListPaymentResponses(getTestBehavior(ctx))
+		return testListPaymentEndpointResponses(getTestBehavior(ctx))
 	case testReadPaymentsEndpoint:
-		return testReadPaymentResponse(getTestBehavior(ctx))
+		return testReadPaymentEndpointResponse(getTestBehavior(ctx))
 	case testListStandingOrdersEndpoint:
-		return testListStandingOrdersResponse(getTestBehavior(ctx))
+		return testListStandingOrdersEndpointResponse(getTestBehavior(ctx))
 	case testListTransactionsEndpoint:
 		fallthrough
 	case testListTransactionsQueryEndpoint:
-		return testListTransactionsResponse(getTestBehavior(ctx))
+		return testListTransactionsEndpointResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
-		return testTransferResponse(getTestBehavior(ctx))
+		return testTransferEndpointResponse(getTestBehavior(ctx))
 	case testCustomersEndpoint:
 		return testCustomersEndpointResponse(getTestBehavior(ctx))
 	default:
