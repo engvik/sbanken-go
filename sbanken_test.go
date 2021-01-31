@@ -24,7 +24,8 @@ var (
 	testListTransactionsEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account"
 	testListTransactionsQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account?index=1"
 
-	testTransferEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
+	testTransferEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
+	testCustomersEndpoint = "https://api.sbanken.no/exec.customers/api/v1/Customers"
 )
 
 type testBehavior string
@@ -69,6 +70,8 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 		return testListTransactionsResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
 		return testTransferResponse(getTestBehavior(ctx))
+	case testCustomersEndpoint:
+		return testCustomersEndpointResponse(getTestBehavior(ctx))
 	default:
 		return nil, 0, nil
 	}
