@@ -8,7 +8,8 @@ A Go client for the Sbanken API
 
 Exernal information:
 * [Sbanken API information](https://sbanken.no/bruke/utviklerportalen/)
-* [Sbanken API documentation](https://api.sbanken.no/exec.bank/swagger/index.html)
+* [Sbanken Bank API documentation](https://api.sbanken.no/exec.bank/swagger/index.html)
+* [Sbanken Customers API documentation](https://api.sbanken.no/exec.customers/swagger/index.html)
 
 ## Get access to the API
 
