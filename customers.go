@@ -22,16 +22,6 @@ type Customer struct {
 	PhoneNumbers  []PhoneNumber `json:"phoneNumbers"`
 }
 
-// Address represents a customer address.
-type Address struct {
-	AddressLine1 string `json:"addressLine1"`
-	AddressLine2 string `json:"addressLine2"`
-	AddressLine3 string `json:"addressLine3"`
-	Country      string `json:"country"`
-	ZipCode      string `json:"zipCode"`
-	City         string `json:"city"`
-}
-
 // PhoneNumber represents a customer phone number.
 type PhoneNumber struct {
 	CountryCode string `json:"countryCode"`
