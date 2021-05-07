@@ -45,7 +45,7 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 	}
 
 	c := &Client{
-		bankBaseURL:      "https://api.sbanken.no/exec.bank/api",
+		bankBaseURL:      "https://publicapi.sbanken.no/apibeta/api",
 		customersBaseURL: "https://api.sbanken.no/exec.customers/api",
 		transport:        transport.New(ctx, tCfg, httpClient),
 	}
