@@ -25,7 +25,7 @@ var (
 	testListTransactionsQueryEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account?index=1"
 
 	testTransferEndpoint  = "https://publicapi.sbanken.no/apibeta/api/v1/Transfers"
-	testCustomersEndpoint = "https://api.sbanken.no/exec.customers/api/v1/Customers"
+	testCustomersEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Customers"
 )
 
 type testBehavior string
@@ -123,13 +123,6 @@ func TestNewClient(t *testing.T) {
 		exp := "https://publicapi.sbanken.no/apibeta/api"
 		if c.bankBaseURL != exp {
 			t.Errorf("unexpected baseURL: got %s, exp %s", c.bankBaseURL, exp)
-		}
-	})
-
-	t.Run("should have customersBaseURL set", func(t *testing.T) {
-		exp := "https://api.sbanken.no/exec.customers/api"
-		if c.customersBaseURL != exp {
-			t.Errorf("unexpected baseURL: got %s, exp %s", c.customersBaseURL, exp)
 		}
 	})
 
