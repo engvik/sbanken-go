@@ -24,8 +24,7 @@ var (
 	testListTransactionsEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account"
 	testListTransactionsQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account?index=1"
 
-	testTransferEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
-	testCustomersEndpoint = "https://api.sbanken.no/exec.customers/api/v1/Customers"
+	testTransferEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
 )
 
 type testBehavior string
@@ -70,8 +69,6 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 		return testListTransactionsEndpointResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
 		return testTransferEndpointResponse(getTestBehavior(ctx))
-	case testCustomersEndpoint:
-		return testCustomersEndpointResponse(getTestBehavior(ctx))
 	default:
 		return nil, 0, nil
 	}
@@ -121,16 +118,9 @@ func TestNewClient(t *testing.T) {
 	}
 
 	t.Run("should have bankBaseURL set", func(t *testing.T) {
-		exp := "https://api.sbanken.no/exec.bank/api"
+		exp := "https://publicapi.sbanken.no/apibeta/api"
 		if c.bankBaseURL != exp {
 			t.Errorf("unexpected baseURL: got %s, exp %s", c.bankBaseURL, exp)
-		}
-	})
-
-	t.Run("should have customersBaseURL set", func(t *testing.T) {
-		exp := "https://api.sbanken.no/exec.customers/api"
-		if c.customersBaseURL != exp {
-			t.Errorf("unexpected baseURL: got %s, exp %s", c.customersBaseURL, exp)
 		}
 	})
 
