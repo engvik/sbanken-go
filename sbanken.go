@@ -40,7 +40,6 @@ func NewClient(ctx context.Context, cfg *Config, httpClient *http.Client) (*Clie
 	tCfg := &transport.Config{
 		ClientID:     cfg.ClientID,
 		ClientSecret: cfg.ClientSecret,
-		CustomerID:   cfg.CustomerID,
 		UserAgent:    userAgent,
 	}
 
