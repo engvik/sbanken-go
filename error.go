@@ -22,8 +22,6 @@ var (
 	ErrMissingClientID = errors.New("ClientID must be set")
 	// ErrMissingClientSecret are returned when ClientSecret is not set.
 	ErrMissingClientSecret = errors.New("ClientSecret must be set")
-	// ErrMissingCustomerID are returned when CustomerID is not set.
-	ErrMissingCustomerID = errors.New("CustomerID must be set")
 	// ErrNotValidOptionStartDate are returned when StartDate is not allowed.
 	ErrNotValidOptionStartDate = errors.New("StartDate is not valid option for this method")
 	// ErrNotValidOptionEndDate are returned when EndDate is not allowed.

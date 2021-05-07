@@ -1,16 +1,17 @@
 package sbanken
 
+import "log"
+
 // Config represents Sbanken client config.
 type Config struct {
 	// ClientID is required.
 	ClientID string
 	// ClientSecret is required.
 	ClientSecret string
-	// CustomerID is required.
-	CustomerID string
 	// UserAgent is for optionally setting a custom user agent.
-	UserAgent string
-	skipAuth  bool
+	CustomerID string
+	UserAgent  string
+	skipAuth   bool
 }
 
 func (c *Config) validate() error {
@@ -22,8 +23,8 @@ func (c *Config) validate() error {
 		return ErrMissingClientSecret
 	}
 
-	if c.CustomerID == "" {
-		return ErrMissingCustomerID
+	if c.CustomerID != "" {
+		log.Println("Customer ID is deprecated.")
 	}
 
 	return nil
