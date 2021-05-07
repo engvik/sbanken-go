@@ -9,7 +9,6 @@ import (
 type Client struct {
 	clientID     string
 	clientSecret string
-	customerID   string
 	userAgent    string
 	http         *http.Client
 	auth         *auth
@@ -19,7 +18,6 @@ type Client struct {
 type Config struct {
 	ClientID     string
 	ClientSecret string
-	CustomerID   string
 	UserAgent    string
 }
 
@@ -28,7 +26,6 @@ func New(ctx context.Context, cfg *Config, httpClient *http.Client) *Client {
 	c := &Client{
 		clientID:     cfg.ClientID,
 		clientSecret: cfg.ClientSecret,
-		customerID:   cfg.CustomerID,
 		userAgent:    cfg.UserAgent,
 	}
 

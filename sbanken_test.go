@@ -95,7 +95,6 @@ func newTestClient(ctx context.Context, t *testing.T) (*Client, error) {
 	cfg := &Config{
 		ClientID:     "some-client-id",
 		ClientSecret: "some-client-secret",
-		CustomerID:   "some-customer-id",
 		skipAuth:     true,
 	}
 
