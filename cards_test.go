@@ -19,6 +19,8 @@ var testCard = Card{
 	Type:          "type",
 	ProductCode:   "code",
 	AccountNumber: "987654321",
+	AccountOwner:  "183756429",
+	CustomerID:    "927354628",
 	VersionNumber: 5,
 }
 
