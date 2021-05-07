@@ -11,13 +11,14 @@ import (
 )
 
 var testAccount = Account{
-	ID:          "test-account",
-	Name:        "My account",
-	Type:        "Account",
-	Number:      "123456789",
-	Available:   123.45,
-	Balance:     123.45,
-	CreditLimit: 0.0,
+	ID:              "test-account",
+	Name:            "My account",
+	Type:            "Account",
+	Number:          "123456789",
+	OwnerCustomerID: "987654321",
+	Available:       123.45,
+	Balance:         123.45,
+	CreditLimit:     0.0,
 }
 
 func testListAccountsEndpointResponse(behavior string) ([]byte, int, error) {

@@ -19,6 +19,8 @@ type Card struct {
 	Type          string `json:"cardType"`
 	ProductCode   string `json:"productCode"`
 	AccountNumber string `json:"accountNumber"`
+	AccountOwner  string `json:"accountOwner"`
+	CustomerID    string `json:"customerId"`
 	VersionNumber int    `json:"cardVersionNumber"`
 }
 
