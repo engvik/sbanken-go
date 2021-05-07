@@ -30,7 +30,7 @@ type PhoneNumber struct {
 
 // GetCustomer lists customer information.
 func (c *Client) GetCustomer(ctx context.Context) (Customer, error) {
-	url := fmt.Sprintf("%s/v1/Customers", c.customersBaseURL)
+	url := fmt.Sprintf("%s/v1/Customers", c.bankBaseURL)
 
 	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
 		Method: http.MethodGet,
