@@ -8,23 +8,23 @@ import (
 )
 
 var (
-	testListAccountsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
-	testReadAccountEndpoint           = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
-	testListCardsEndpoint             = "https://api.sbanken.no/exec.bank/api/v1/Cards"
-	testListEfakturasEndpoint         = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
-	testListEfakturasQueryEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/Efakturas?index=1"
-	testPayEfakturaEndpoint           = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
-	testListNewEfakturasEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new"
-	testListNewEfakturasQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new?index=1"
-	testReadEfakturaEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/test-efaktura"
-	testListPaymentsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account"
-	testListPaymentsQueryEndpoint     = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account?index=1"
-	testReadPaymentsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account/test-payment"
-	testListStandingOrdersEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/StandingOrders/test-account"
-	testListTransactionsEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account"
-	testListTransactionsQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account?index=1"
+	testListAccountsEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Accounts"
+	testReadAccountEndpoint           = "https://publicapi.sbanken.no/apibeta/api/v1/Accounts/test-account"
+	testListCardsEndpoint             = "https://publicapi.sbanken.no/apibeta/api/v1/Cards"
+	testListEfakturasEndpoint         = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas"
+	testListEfakturasQueryEndpoint    = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas?index=1"
+	testPayEfakturaEndpoint           = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas"
+	testListNewEfakturasEndpoint      = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/new"
+	testListNewEfakturasQueryEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/new?index=1"
+	testReadEfakturaEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/test-efaktura"
+	testListPaymentsEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account"
+	testListPaymentsQueryEndpoint     = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account?index=1"
+	testReadPaymentsEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account/test-payment"
+	testListStandingOrdersEndpoint    = "https://publicapi.sbanken.no/apibeta/api/v1/StandingOrders/test-account"
+	testListTransactionsEndpoint      = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account"
+	testListTransactionsQueryEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account?index=1"
 
-	testTransferEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
+	testTransferEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Transfers"
 )
 
 type testBehavior string
