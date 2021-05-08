@@ -30,6 +30,7 @@ var testTransaction = Transaction{
 	Text:                        "transaction",
 	TransactionType:             "transaction",
 	TransactionTypeText:         "asdf",
+	TransactionID:               "1337",
 	ReservationType:             "reservation",
 	Source:                      "source",
 	Amount:                      999.99,
@@ -163,6 +164,71 @@ func TestListTransactions(t *testing.T) {
 			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
 
 			a, err := c.ListTransactions(ctx, tc.accountID, tc.q)
+			if err != nil {
+				errStr := err.Error()
+				expErrStr := tc.expErr.Error()
+				if errStr != expErrStr {
+					t.Errorf("unexpected error: got %s, exp %s", errStr, expErrStr)
+				}
+
+				return
+			}
+
+			if !reflect.DeepEqual(a, tc.exp) {
+				t.Errorf("unexpected transaction: got %v, exp %v", a, tc.exp)
+			}
+		})
+	}
+}
+
+func TestListArchivedTransactions(t *testing.T) {
+	ctx := context.Background()
+	c, err := newTestClient(ctx, t)
+	if err != nil {
+		t.Fatalf("error setting up test: %v", err)
+	}
+
+	tests := []struct {
+		name      string
+		accountID string
+		q         *TransactionListQuery
+		behavior  string
+		exp       []Transaction
+		expErr    error
+	}{
+		{
+			name:   "should fail when no accountID is passed",
+			expErr: ErrMissingAccountID,
+		},
+		{
+			name:      "should return error when error occurs",
+			accountID: "test-account",
+			q:         nil,
+			behavior:  "fail",
+			exp:       nil,
+			expErr:    getTestError("ListTransactions"),
+		},
+		{
+			name:      "should list transactions without query",
+			accountID: "test-account",
+			q:         nil,
+			exp:       []Transaction{testTransaction},
+			expErr:    nil,
+		},
+		{
+			name:      "should list transactions with query",
+			accountID: "test-account",
+			q:         &TransactionListQuery{Index: "1"},
+			exp:       []Transaction{testTransaction},
+			expErr:    nil,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			ctx = context.WithValue(ctx, testBehavior("test-behavior"), tc.behavior)
+
+			a, err := c.ListArchivedTransactions(ctx, tc.accountID, tc.q)
 			if err != nil {
 				errStr := err.Error()
 				expErrStr := tc.expErr.Error()

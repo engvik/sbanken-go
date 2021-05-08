@@ -70,6 +70,10 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListTransactionsEndpoint:
 		fallthrough
 	case testListTransactionsQueryEndpoint:
+		fallthrough
+	case testListArchivedTransactionsEndpoint:
+		fallthrough
+	case testListArchivedTransactionsQueryEndpoint:
 		return testListTransactionsEndpointResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
 		return testTransferEndpointResponse(getTestBehavior(ctx))
