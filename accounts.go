@@ -12,13 +12,14 @@ import (
 // Account represents an account.
 // Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Accounts%20v1
 type Account struct {
-	ID          string  `json:"accountId"`
-	Name        string  `json:"name"`
-	Type        string  `json:"accountType"`
-	Number      string  `json:"accountNumber"`
-	Available   float32 `json:"available"`
-	Balance     float32 `json:"balance"`
-	CreditLimit float32 `json:"creditLimit"`
+	ID              string  `json:"accountId"`
+	Name            string  `json:"name"`
+	Type            string  `json:"accountType"`
+	Number          string  `json:"accountNumber"`
+	OwnerCustomerID string  `json:"ownerCustomerId"`
+	Available       float32 `json:"available"`
+	Balance         float32 `json:"balance"`
+	CreditLimit     float32 `json:"creditLimit"`
 }
 
 // ListAccounts lists the accounts.

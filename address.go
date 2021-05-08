@@ -10,6 +10,7 @@ type Address struct {
 	AddressLine1 string `json:"addressLine1"`
 	AddressLine2 string `json:"addressLine2"`
 	AddressLine3 string `json:"addressLine3"`
+	AddressLine4 string `json:"addressLine4"`
 	Country      string `json:"country"`
 	ZipCode      string `json:"zipCode"`
 	City         string `json:"city"`
@@ -31,6 +32,10 @@ func (a Address) String() string {
 		addrLines = append(addrLines, a.AddressLine3)
 	}
 
+	if a.AddressLine4 != "" {
+		addrLines = append(addrLines, a.AddressLine4)
+	}
+
 	if a.ZipCode != "" && a.City != "" {
 		addrLines = append(addrLines, fmt.Sprintf("%s %s", a.ZipCode, a.City))
 	} else {
@@ -47,5 +52,5 @@ func (a Address) String() string {
 		addrLines = append(addrLines, a.Country)
 	}
 
-	return fmt.Sprintf("%s", strings.Join(addrLines, ", "))
+	return strings.Join(addrLines, ", ")
 }

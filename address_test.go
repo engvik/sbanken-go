@@ -53,11 +53,12 @@ func TestAddressString(t *testing.T) {
 				AddressLine1: "c/o Test Testesen",
 				AddressLine2: "Testerstreet 1",
 				AddressLine3: "PO 13371337",
+				AddressLine4: "Blabla",
 				Country:      "Norway",
 				ZipCode:      "1337",
 				City:         "Sandvika",
 			},
-			exp: "c/o Test Testesen, Testerstreet 1, PO 13371337, 1337 Sandvika, Norway",
+			exp: "c/o Test Testesen, Testerstreet 1, PO 13371337, Blabla, 1337 Sandvika, Norway",
 		},
 	}
 

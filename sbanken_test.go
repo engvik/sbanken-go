@@ -7,25 +7,28 @@ import (
 	"github.com/engvik/sbanken-go/internal/transport"
 )
 
-var (
-	testListAccountsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Accounts"
-	testReadAccountEndpoint           = "https://api.sbanken.no/exec.bank/api/v1/Accounts/test-account"
-	testListCardsEndpoint             = "https://api.sbanken.no/exec.bank/api/v1/Cards"
-	testListEfakturasEndpoint         = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
-	testListEfakturasQueryEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/Efakturas?index=1"
-	testPayEfakturaEndpoint           = "https://api.sbanken.no/exec.bank/api/v1/Efakturas"
-	testListNewEfakturasEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new"
-	testListNewEfakturasQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/new?index=1"
-	testReadEfakturaEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Efakturas/test-efaktura"
-	testListPaymentsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account"
-	testListPaymentsQueryEndpoint     = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account?index=1"
-	testReadPaymentsEndpoint          = "https://api.sbanken.no/exec.bank/api/v1/Payments/test-account/test-payment"
-	testListStandingOrdersEndpoint    = "https://api.sbanken.no/exec.bank/api/v1/StandingOrders/test-account"
-	testListTransactionsEndpoint      = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account"
-	testListTransactionsQueryEndpoint = "https://api.sbanken.no/exec.bank/api/v1/Transactions/test-account?index=1"
+const baseURL = "https://publicapi.sbanken.no/apibeta/api/"
 
-	testTransferEndpoint  = "https://api.sbanken.no/exec.bank/api/v1/Transfers"
-	testCustomersEndpoint = "https://api.sbanken.no/exec.customers/api/v1/Customers"
+var (
+	testListAccountsEndpoint                  = baseURL + "v1/Accounts"
+	testReadAccountEndpoint                   = baseURL + "v1/Accounts/test-account"
+	testListCardsEndpoint                     = baseURL + "v1/Cards"
+	testListEfakturasEndpoint                 = baseURL + "v1/Efakturas"
+	testListEfakturasQueryEndpoint            = baseURL + "v1/Efakturas?index=1"
+	testPayEfakturaEndpoint                   = baseURL + "v1/Efakturas"
+	testListNewEfakturasEndpoint              = baseURL + "v1/Efakturas/new"
+	testListNewEfakturasQueryEndpoint         = baseURL + "v1/Efakturas/new?index=1"
+	testReadEfakturaEndpoint                  = baseURL + "v1/Efakturas/test-efaktura"
+	testListPaymentsEndpoint                  = baseURL + "v1/Payments/test-account"
+	testListPaymentsQueryEndpoint             = baseURL + "v1/Payments/test-account?index=1"
+	testReadPaymentsEndpoint                  = baseURL + "v1/Payments/test-account/test-payment"
+	testListStandingOrdersEndpoint            = baseURL + "v1/StandingOrders/test-account"
+	testListTransactionsEndpoint              = baseURL + "v1/Transactions/test-account"
+	testListTransactionsQueryEndpoint         = baseURL + "v1/Transactions/test-account?index=1"
+	testListArchivedTransactionsEndpoint      = baseURL + "v1/Transactions/archive/test-account"
+	testListArchivedTransactionsQueryEndpoint = baseURL + "v1/Transactions/archive/test-account?index=1"
+	testTransferEndpoint                      = baseURL + "v1/Transfers"
+	testCustomersEndpoint                     = baseURL + "v1/Customers"
 )
 
 type testBehavior string
@@ -67,6 +70,10 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListTransactionsEndpoint:
 		fallthrough
 	case testListTransactionsQueryEndpoint:
+		fallthrough
+	case testListArchivedTransactionsEndpoint:
+		fallthrough
+	case testListArchivedTransactionsQueryEndpoint:
 		return testListTransactionsEndpointResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
 		return testTransferEndpointResponse(getTestBehavior(ctx))
@@ -98,7 +105,6 @@ func newTestClient(ctx context.Context, t *testing.T) (*Client, error) {
 	cfg := &Config{
 		ClientID:     "some-client-id",
 		ClientSecret: "some-client-secret",
-		CustomerID:   "some-customer-id",
 		skipAuth:     true,
 	}
 
@@ -121,16 +127,9 @@ func TestNewClient(t *testing.T) {
 	}
 
 	t.Run("should have bankBaseURL set", func(t *testing.T) {
-		exp := "https://api.sbanken.no/exec.bank/api"
+		exp := "https://publicapi.sbanken.no/apibeta/api"
 		if c.bankBaseURL != exp {
 			t.Errorf("unexpected baseURL: got %s, exp %s", c.bankBaseURL, exp)
-		}
-	})
-
-	t.Run("should have customersBaseURL set", func(t *testing.T) {
-		exp := "https://api.sbanken.no/exec.customers/api"
-		if c.customersBaseURL != exp {
-			t.Errorf("unexpected baseURL: got %s, exp %s", c.customersBaseURL, exp)
 		}
 	})
 

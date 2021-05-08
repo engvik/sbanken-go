@@ -19,13 +19,8 @@ func TestValidate(t *testing.T) {
 			exp:  ErrMissingClientSecret,
 		},
 		{
-			name: "should not validate when CustomerID is missing",
-			cfg:  &Config{ClientID: "client-id", ClientSecret: "client-secret"},
-			exp:  ErrMissingCustomerID,
-		},
-		{
 			name: "should validate when all required parameters are set",
-			cfg:  &Config{ClientID: "client-id", ClientSecret: "client-secret", CustomerID: "customer-id"},
+			cfg:  &Config{ClientID: "client-id", ClientSecret: "client-secret"},
 			exp:  nil,
 		},
 	}
