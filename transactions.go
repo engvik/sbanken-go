@@ -12,7 +12,7 @@ import (
 )
 
 // Transaction represents a transaction.
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Transactions%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Transactions
 type Transaction struct {
 	CardDetails                 CardDetails        `json:"cardDetails"`
 	TransactionDetails          TransactionDetails `json:"transactionDetails"`

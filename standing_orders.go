@@ -10,7 +10,7 @@ import (
 )
 
 // StandingOrder represents a standing order (repeated transfers and payments).
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=StandingOrders%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/StandingOrders
 type StandingOrder struct {
 	FreeTerms              []string `json:"freeTerms"`
 	BeneficiaryName        string   `json:"beneficiaryName"`

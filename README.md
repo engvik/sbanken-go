@@ -7,8 +7,7 @@ A Go client for the Sbanken API
 
 Exernal information:
 * [Sbanken API information](https://sbanken.no/bruke/utviklerportalen/)
-* [Sbanken Bank API documentation](https://api.sbanken.no/exec.bank/swagger/index.html)
-* [Sbanken Customers API documentation](https://api.sbanken.no/exec.customers/swagger/index.html)
+* [Sbanken API documentation](https://publicapi.sbanken.no/openapi/apibeta/index.html)
 
 ## Get access to the API
 
@@ -21,7 +20,6 @@ ctx := context.Background()
 cfg := sbanken.Config{
     ClientID:     os.Getenv("CLIENT_ID"),
     ClientSecret: os.Getenv("CLIENT_SECRET"),
-    CustomerID:   os.Getenv("CUSTOMER_ID"),
 }
 
 c, err := sbanken.NewClient(ctx, &cfg, nil)

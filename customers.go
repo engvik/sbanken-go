@@ -10,7 +10,7 @@ import (
 )
 
 // Customer represents a customer.
-// Sbanken API documentation: https://api.sbanken.no/exec.customers/swagger/index.html?urls.primaryName=Customers%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Customers
 type Customer struct {
 	CustomerID    string        `json:"customerID"`
 	FirstName     string        `json:"firstName"`

@@ -18,7 +18,7 @@ type TransferQuery struct {
 }
 
 // Transfer  executes a transfer between two accounts.
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Transfers%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Transfers
 func (c *Client) Transfer(ctx context.Context, q *TransferQuery) error {
 	if q == nil {
 		return ErrMissingTransferQuery

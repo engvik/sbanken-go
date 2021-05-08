@@ -11,7 +11,7 @@ import (
 )
 
 // Payment represents a payment.
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Payments%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Payments
 type Payment struct {
 	AllowedNewStatusTypes  []string `json:"allowedNewStatusTypes"`
 	ID                     string   `json:"paymentId"`

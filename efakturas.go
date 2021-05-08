@@ -12,7 +12,7 @@ import (
 )
 
 // Efaktura represents an efaktura.
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=EFakturas%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Efaktura
 type Efaktura struct {
 	ID                  string  `json:"eFakturaId"`
 	IssuerID            string  `json:"issuerId"`
