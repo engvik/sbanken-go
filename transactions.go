@@ -23,7 +23,7 @@ type Transaction struct {
 	TransactionType             string             `json:"transactionType"`
 	TransactionTypeText         string             `json:"transactionTypeText"`
 	ReservationType             string             `json:"reservationType"`
-	TransactionID               string             ` json:"transactionId"`
+	TransactionID               string             `json:"transactionId"`
 	Source                      string             `json:"source"`
 	Amount                      float32            `json:"amount"`
 	TransactionTypeCode         int                `json:"transactionTypeCode"`
