@@ -8,24 +8,25 @@ import (
 )
 
 var (
-	testListAccountsEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Accounts"
-	testReadAccountEndpoint           = "https://publicapi.sbanken.no/apibeta/api/v1/Accounts/test-account"
-	testListCardsEndpoint             = "https://publicapi.sbanken.no/apibeta/api/v1/Cards"
-	testListEfakturasEndpoint         = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas"
-	testListEfakturasQueryEndpoint    = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas?index=1"
-	testPayEfakturaEndpoint           = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas"
-	testListNewEfakturasEndpoint      = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/new"
-	testListNewEfakturasQueryEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/new?index=1"
-	testReadEfakturaEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/test-efaktura"
-	testListPaymentsEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account"
-	testListPaymentsQueryEndpoint     = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account?index=1"
-	testReadPaymentsEndpoint          = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account/test-payment"
-	testListStandingOrdersEndpoint    = "https://publicapi.sbanken.no/apibeta/api/v1/StandingOrders/test-account"
-	testListTransactionsEndpoint      = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account"
-	testListTransactionsQueryEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account?index=1"
-
-	testTransferEndpoint  = "https://publicapi.sbanken.no/apibeta/api/v1/Transfers"
-	testCustomersEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Customers"
+	testListAccountsEndpoint                  = "https://publicapi.sbanken.no/apibeta/api/v1/Accounts"
+	testReadAccountEndpoint                   = "https://publicapi.sbanken.no/apibeta/api/v1/Accounts/test-account"
+	testListCardsEndpoint                     = "https://publicapi.sbanken.no/apibeta/api/v1/Cards"
+	testListEfakturasEndpoint                 = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas"
+	testListEfakturasQueryEndpoint            = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas?index=1"
+	testPayEfakturaEndpoint                   = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas"
+	testListNewEfakturasEndpoint              = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/new"
+	testListNewEfakturasQueryEndpoint         = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/new?index=1"
+	testReadEfakturaEndpoint                  = "https://publicapi.sbanken.no/apibeta/api/v1/Efakturas/test-efaktura"
+	testListPaymentsEndpoint                  = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account"
+	testListPaymentsQueryEndpoint             = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account?index=1"
+	testReadPaymentsEndpoint                  = "https://publicapi.sbanken.no/apibeta/api/v1/Payments/test-account/test-payment"
+	testListStandingOrdersEndpoint            = "https://publicapi.sbanken.no/apibeta/api/v1/StandingOrders/test-account"
+	testListTransactionsEndpoint              = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account"
+	testListTransactionsQueryEndpoint         = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/test-account?index=1"
+	testListArchivedTransactionsEndpoint      = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/archive/test-account"
+	testListArchivedTransactionsQueryEndpoint = "https://publicapi.sbanken.no/apibeta/api/v1/Transactions/archive/test-account?index=1"
+	testTransferEndpoint                      = "https://publicapi.sbanken.no/apibeta/api/v1/Transfers"
+	testCustomersEndpoint                     = "https://publicapi.sbanken.no/apibeta/api/v1/Customers"
 )
 
 type testBehavior string
@@ -67,6 +68,10 @@ func (c testTransportClient) Request(ctx context.Context, r *transport.HTTPReque
 	case testListTransactionsEndpoint:
 		fallthrough
 	case testListTransactionsQueryEndpoint:
+		fallthrough
+	case testListArchivedTransactionsEndpoint:
+		fallthrough
+	case testListArchivedTransactionsQueryEndpoint:
 		return testListTransactionsEndpointResponse(getTestBehavior(ctx))
 	case testTransferEndpoint:
 		return testTransferEndpointResponse(getTestBehavior(ctx))

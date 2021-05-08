@@ -23,6 +23,7 @@ type Transaction struct {
 	TransactionType             string             `json:"transactionType"`
 	TransactionTypeText         string             `json:"transactionTypeText"`
 	ReservationType             string             `json:"reservationType"`
+	TransactionID               string             ` json:"transactionId"`
 	Source                      string             `json:"source"`
 	Amount                      float32            `json:"amount"`
 	TransactionTypeCode         int                `json:"transactionTypeCode"`
@@ -101,6 +102,53 @@ func (c *Client) ListTransactions(ctx context.Context, accountID string, q *Tran
 	}
 
 	url := fmt.Sprintf("%s/v1/Transactions/%s", c.bankBaseURL, accountID)
+
+	if q != nil {
+		qs, err := q.QueryString(url)
+		if err != nil {
+			return nil, fmt.Errorf("QueryString: %w", err)
+		}
+
+		url = fmt.Sprintf("%s?%s", url, qs)
+	}
+
+	res, sc, err := c.transport.Request(ctx, &transport.HTTPRequest{
+		Method: http.MethodGet,
+		URL:    url,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("request: %w", err)
+	}
+
+	data := struct {
+		Transactions []Transaction `json:"items"`
+		transport.HTTPResponse
+	}{}
+
+	if err := json.Unmarshal(res, &data); err != nil {
+		return data.Transactions, fmt.Errorf("Unmarshal: %w", err)
+	}
+
+	if data.IsError || sc != http.StatusOK {
+		return data.Transactions, &Error{
+			"ListTransactions",
+			data.ErrorType,
+			data.ErrorMessage,
+			data.ErrorCode,
+			sc,
+		}
+	}
+
+	return data.Transactions, nil
+}
+
+// ListArchivedTransactions returns archived transactions.
+func (c *Client) ListArchivedTransactions(ctx context.Context, accountID string, q *TransactionListQuery) ([]Transaction, error) {
+	if accountID == "" {
+		return nil, ErrMissingAccountID
+	}
+
+	url := fmt.Sprintf("%s/v1/Transactions/archive/%s", c.bankBaseURL, accountID)
 
 	if q != nil {
 		qs, err := q.QueryString(url)
