@@ -1,7 +1,7 @@
 // Package sbanken provides an easy way to work with the Sbanken API.
 //
 // Sbanken API information: https://sbanken.no/bruke/utviklerportalen/
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html
 package sbanken
 
 import (

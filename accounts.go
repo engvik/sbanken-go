@@ -10,7 +10,7 @@ import (
 )
 
 // Account represents an account.
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Accounts%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Accounts
 type Account struct {
 	ID              string  `json:"accountId"`
 	Name            string  `json:"name"`

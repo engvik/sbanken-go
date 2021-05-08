@@ -10,7 +10,7 @@ import (
 )
 
 // Card represents a card.
-// Sbanken API documentation: https://api.sbanken.no/exec.bank/swagger/index.html?urls.primaryName=Cards%20v1
+// Sbanken API documentation: https://publicapi.sbanken.no/openapi/apibeta/index.html#/Cards/Cards_List
 type Card struct {
 	ID            string `json:"cardId"`
 	Number        string `json:"cardNumber"`
